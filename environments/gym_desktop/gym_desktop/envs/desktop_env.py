@@ -62,7 +62,7 @@ class DesktopEnv(gym.Env):
         self.sct = mss.mss()
         self.start_time = time.time()
         self.time_limit = 10
-        self.action_space = spaces.Discrete(71)
+        self.action_space = spaces.Discrete(140)
 
         self.observation_space = spaces.Box(
             low=0, high=255, shape=(STATE_H, STATE_W, 3), dtype=np.uint8
