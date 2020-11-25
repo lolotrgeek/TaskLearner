@@ -1,43 +1,79 @@
-from pynput import keyboard
+from pynput.keyboard import Key, Controller
 import json
 
-keymap = {}
-keys = []
-modifiers = []
+keyboard = Controller()
+totalkeys = 0
+actions = {}
 
-# Work in Progress
-# Goal: generate a readable keymap, save it to a file
-# https://stackabuse.com/reading-and-writing-lists-to-a-file-in-python/
-# https://stackabuse.com/reading-and-writing-json-to-a-file-in-python/
 
-def on_release(key):
-    modifier = str(key).startswith('Key.')
-    if modifier is True:
-        key = str(str(key).split('.')[1])
-        modifiers.append(key)
+with open('H:/TaskLearner/utils/actionmap.json') as json_file:
+    data = json.load(json_file)
+    actions = data
+    # totalkeys = totalkeys + len(actions['keys'])
+    # totalkeys = totalkeys + len(actions['special'])
+    # totalkeys = totalkeys + len(actions['modifiers'])
+
+def doAction(space, number):
+    if space == 'keys':
+        strikeKey(numberToAction(space, number))
+    elif space == 'special':
+        strikeSpecial(numberToAction(space, number))
+    elif space == 'modifiers':
+        handleModifier(numberToAction(space, number))
+
+
+
+def numberToAction(space, number):
+    action = actions[space][str(number)]
+    print(action)
+    return action
+
+def strikeKey(key):
+    keyboard.press(key)
+    keyboard.release(key)
+
+def strikeSpecial(key):
+    keyboard.press(getattr(Key, key))
+    keyboard.release(getattr(Key, key))
+
+def pressModifier(key):
+    keyboard.press(getattr(Key, key))
+
+def releaseModifier(key):
+    keyboard.release(getattr(Key, key))
+
+def handleModifier(action):
+    if action == "backspace_release":
+        releaseModifier("backspace")
+
+    elif action == "up_release":
+        releaseModifier("up")
+
+    elif action == "down_release":
+        releaseModifier("down")
+
+    elif action == "right_release":
+        releaseModifier("right")
+
+    elif action == "left_release":
+        releaseModifier("left")
+
+    elif action == "alt_l_release":
+        releaseModifier("alt_l")
+
+    elif action == "ctrl_l_release":
+        releaseModifier("ctrl_l")
+
+    elif action == "shift_release":
+        releaseModifier("shift")
     else:
-        keys.append(key)
+        pressModifier(action)
 
-    print(' {0} released'.format(key))
-
-    if key == 'esc':
-        keymap["keys"] = keys
-        keymap["modifiers"] = modifiers
-        print(keymap)
-
-    # with open('listfile.txt', 'w') as filehandle:
-    #     for listitem in places:
-    #         filehandle.write('%s\n' % listitem)
-
-        return False
-
-
-# Collect events until released
-with keyboard.Listener(
-        on_release=on_release) as listener:
-    listener.join()
-
-# ...or, in a non-blocking fashion:
-listener = keyboard.Listener(
-    on_release=on_release)
-listener.start()
+def cleanup(): 
+    actions['keys']
+    actions['special']
+    actions['modifiers']
+    
+# numberToAction('special', 0)
+# print(type(actions))
+doAction('modifiers', 0)

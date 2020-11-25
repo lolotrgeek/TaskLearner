@@ -47,24 +47,31 @@
         ".",
         "/"
     ],
-    "modifiers": [
+    "special": [
         "enter",
-        "backspace",
-        "delete",
-        "tab",
-        "up",
-        "down",
-        "right",
-        "left",
         "home",
         "end",
-        "page_up",
-        "page_down",
         "cmd",
-        "alt_l",
-        "ctrl_l",
-        "shift",
         "space",
+        "tab",
         "esc"
+    ],
+    "modifiers": [
+        "backspace",
+        "backspace_release",
+        "up",
+        "up_release",
+        "down",
+        "down_release",
+        "right",
+        "right_release",
+        "left",
+        "left_release",
+        "alt_l",
+        "alt_l_release",
+        "ctrl_l",
+        "ctrl_l_release",
+        "shift",
+        "shift_release"
     ]
 }
