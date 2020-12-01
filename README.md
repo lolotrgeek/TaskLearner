@@ -10,42 +10,21 @@ conda activate tracker
 Screen captured as pixels.
 
 ### Actions
-- Discrete
-    -  All non-modifier keys
-    - Each key has one action, "strike" which presses and releases the key
-- Multi-Discrete
-    - each key/button has two actions, "press" and "release"
-    - modifier keys
-    ```
-        "enter",
-        "backspace",
-        "delete",
-        "enter",
-        "tab",
-        "up",
-        "down",
-        "right",
-        "left",
-        "home",
-        "end",
-        "page_up",
-        "page_down",
-        "cmd",
-        "alt_l",
-        "ctrl_l",
-        "shift",
-        "space",
-        "esc"
-    ```
-    - mouse buttons
-    ```
-    left, right, middle
-    ```
-    
+- Mouse
+    - Move 2
+    - Click 2
+    - Scroll up 2 
+    - Scroll down 2
 
-- Continuous
-    - mouse movements
-    - mouse scroll
+- Keyboard
+    - Standard keys: 61     
+    - Modified keys: 61
+
+- Special
+    - Copy 2
+    - Paste 2
+    - Open 2
+
 
 ## Todo
 - action space mouse mapping
