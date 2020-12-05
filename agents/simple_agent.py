@@ -3,12 +3,18 @@ import cv2
 from gym.wrappers import Monitor
 import gym_desktop
 
-# Takes no actions, simply observes the environment
+
+
+# Takes defined actions and observes the environment
 
 env = gym.make('Desktop-v0')
-
-
 max_ep = 10
+
+class PointerEvent():
+    def __init__(self, x=0, y=0, buttonmask=0):
+        self.x = x
+        self.y = y
+        self.buttonmask = buttonmask
 
 for ep_cnt in range(max_ep):
     step_cnt = 0
@@ -17,7 +23,7 @@ for ep_cnt in range(max_ep):
     state = env.reset()
 
     while not done:
-        next_state, reward, done, _ = env.step()
+        next_state, reward, done, _ = env.step([1, PointerEvent(x=0, y=0, buttonmask=0), "copy"])
         env.render()
         step_cnt += 1
         ep_reward += reward

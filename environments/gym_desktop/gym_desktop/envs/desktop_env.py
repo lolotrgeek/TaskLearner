@@ -5,12 +5,50 @@ import time
 import cv2
 import mss
 import numpy as np
+import gym_desktop.envs.utils as utils
+
+keyMap = utils.keyboard.pi.machineMapDict.keys
+specialActions = utils.keyboard.pi.machineMapDict.special
 
 STATE_W = 800
 STATE_H = 640
 
+
+def keycode(key):
+    if key in keyMap:
+        return keyMap[key]
+    else:
+        raise error.Error(
+            'Not sure how to translate to keycode: {!r}'.format(key))
+
+
+class KeyEvent():
+    """
+    The KeyEvent consumes a key int 
+    """
+
+    def __init__(self, key=0):
+        self.key = key
+
+
+class PointerEvent():
+    # TODO: add mousewheel or pgup pgdn keys
+    def __init__(self, x=0, y=0, buttonmask=0):
+        self.x = x
+        self.y = y
+        self.buttonmask = buttonmask
+
+class SpecialEvent():
+    """
+    The SpecialEvent consumes an action string 
+    """
+    #TODO: maybe better to encode as int for efficiency?
+    def __init__(self, action=''):
+        self.action = action
+
 class ActionSpace(gym.Space):
-    """The space of VNC actions.
+    """The space of Desktop actions.
+    https://github.com/openai/universe/blob/master/universe/spaces/vnc_action_space.py
 
     You can submit a list of KeyEvents or PointerEvents. KeyEvents
     correspond to pressing or releasing a key. PointerEvents correspond
@@ -26,20 +64,30 @@ class ActionSpace(gym.Space):
         keys (list<KeyEvent>): The allowed key presses
         buttonmasks (list<int>): The allowed buttonmasks (i.e. mouse presses)
         screen_shape (int, int): The X and Y dimensions of the screen
+
     """
 
-    def __init__(self, keys=None, buttonmasks=None, screen_shape=(STATE_W, STATE_H)):
+    def __init__(self, keys=None, special=None, buttonmasks=None, screen_shape=(STATE_W, STATE_H)):
         self.keys = []
+        self.special = []
         if keys is None:
-            # keys = [c for c in string.printable] + list(constants.KEYMAP.keys())
+            keys = keyMap
             print('load keymap')
-        for key in (keys or []):
-            print('setting keys')
-            # down = vnc_event.KeyEvent.by_name(key, down=True)
+        for key in keys:
+            # print('setting keys')
+            # keys[key]
+            # down = KeyEvent.by_name(key, down=True)
             # up = vnc_event.KeyEvent.by_name(key, down=False)
             # self.keys.append(down)
             # self.keys.append(up)
+            self.keys.append(key)
         self._key_set = set(self.keys)
+
+        if special is None:
+            special = specialActions
+        for action in special:
+            self.special.append(special[action])
+        self._special_set = set(self.special)
 
         self.screen_shape = screen_shape
         if self.screen_shape is not None:
@@ -55,21 +103,22 @@ class ActionSpace(gym.Space):
             return False
 
         for a in action:
-            print('action taken')
-            # if isinstance(a, vnc_event.KeyEvent):
-            #     if a not in self._key_set:
-            #         return False
-            # elif isinstance(a, vnc_event.PointerEvent):
-            #     if self.screen_shape is None:
-            #         return False
+            if isinstance(a, KeyEvent):
+                if a not in self._key_set:
+                    return False
+            elif isinstance(a, PointerEvent):
+                if self.screen_shape is None:
+                    return False
 
-            #     if a.x < 0 or a.x > self.screen_shape[0]:
-            #         return False
-            #     elif a.y < 0 or a.y > self.screen_shape[1]:
-            #         return False
-            #     elif a.buttonmask not in self._buttonmask_set:
-            #         return False
-
+                if a.x < 0 or a.x > self.screen_shape[0]:
+                    return False
+                elif a.y < 0 or a.y > self.screen_shape[1]:
+                    return False
+                elif a.buttonmask not in self._buttonmask_set:
+                    return False
+            elif isinstance(a, SpecialEvent):
+                if a not in self._special_set:
+                    return False
         return True
 
     def sample(self):
@@ -88,9 +137,10 @@ class ActionSpace(gym.Space):
             y = self.np_random.randint(self.screen_shape[1])
             buttonmask = self.np_random.choice(self.buttonmasks)
 
-            # event = [vnc_event.PointerEvent(x, y, buttonmask)]
-            event = []
+            event = [PointerEvent(x, y, buttonmask)]
+            # event = []
         return event
+
 
 class DesktopEnv(gym.Env):
     """
@@ -150,12 +200,33 @@ class DesktopEnv(gym.Env):
         )
 
     def step(self, action=None):
+        err_msg = "%r (%s) invalid" % (action, type(action))
+        assert self.action_space.contains(action), err_msg
         self.last_time = time.time()
         self.state = np.array(self.sct.grab(
             {"top": 0, "left": 0, "width": STATE_W, "height": STATE_H}))
         done = False
         step_reward = 1
-        # Decode and perform actions here
+        # Actions:
+        for a in action:
+            print(str(a))
+            if isinstance(a, int):
+                # integers which represent key presses
+                # TODO: decode / test actual key press
+                print(str(keyMap[a]))
+
+            elif isinstance(a, str):
+                # strings represent special actions
+                print(a)
+
+            elif isinstance(a, object):
+                # objects which represent x,y coordinate with a buttonmask (clicks)
+                # TODO: decode/test actual mouse movements
+                print(str(a.x), ',', str(a.y))
+
+            else:
+                print('no action')
+
         if self.last_time - self.start_time > self.time_limit:
             done = True
         return self.state, step_reward, done, {}
@@ -163,6 +234,9 @@ class DesktopEnv(gym.Env):
     def reset(self):
         self.state = np.array(self.sct.grab(
             {"top": 0, "left": 0, "width": STATE_W, "height": STATE_H}))
+        # release all keys
+        # move mouse to 0,0
+        # clear clipboard
         return self.state
 
     def render(self, mode='human'):
