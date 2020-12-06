@@ -16,7 +16,6 @@ STATE_W = 800
 STATE_H = 640
 
 
-
 def keycode(key):
     if key in keyMap:
         return keyMap[key]
@@ -27,7 +26,7 @@ def keycode(key):
 
 class KeyEvent():
     """
-    The KeyEvent consumes a key int 
+    The KeyEvent consumes a key int
     """
 
     def __init__(self, key=0):
@@ -43,13 +42,16 @@ class PointerEvent():
         self.v_wheel = v_wheel
         self.h_wheel = h_wheel
 
+
 class SpecialEvent():
     """
-    The SpecialEvent consumes an action string 
+    The SpecialEvent consumes an action string
     """
-    #TODO: maybe better to encode as int for efficiency?
+    # TODO: maybe better to encode as int for efficiency?
+
     def __init__(self, action=''):
         self.action = action
+
 
 class ActionSpace(gym.Space):
     """The space of Desktop actions.
@@ -196,7 +198,13 @@ class DesktopEnv(gym.Env):
     # https://stackoverflow.com/questions/59201850/how-can-i-show-an-image-in-the-same-frame-of-a-video-in-opencv-python
 
     def __init__(self):
-        self.sct = mss.mss(display=":0.0")
+        self.camera = cv2.VideoCapture(0)
+        # self.codec = 0x47504A4D  # MJPG
+        # self.camera.set(cv2.CAP_PROP_FPS, 30.0)
+        # self.camera.set(cv2.CAP_PROP_FOURCC, self.codec)
+        # self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+        # self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+        # self.sct = mss.mss()
         self.start_time = time.time()
         self.time_limit = 10
         self.action_space = ActionSpace()
@@ -208,8 +216,18 @@ class DesktopEnv(gym.Env):
         err_msg = "%r (%s) invalid" % (action, type(action))
         assert self.action_space.contains(action), err_msg
         self.last_time = time.time()
-        self.state = np.array(self.sct.grab(
-            {"top": 0, "left": 0, "width": STATE_W, "height": STATE_H}))
+        if not self.camera.isOpened():
+            # capture local desktop if capture card is not present
+            # self.state = np.array(self.sct.grab(
+            #     {"top": 0, "left": 0, "width": STATE_W, "height": STATE_H}))
+            self.state=np.array({})
+            
+        else:
+            ret, im = self.camera.read(0)
+            if not ret:
+                print("failed to grab frame")
+            self.state = im
+
         done = False
         step_reward = 1
         # Actions:
@@ -236,8 +254,10 @@ class DesktopEnv(gym.Env):
         return self.state, step_reward, done, {}
 
     def reset(self):
-        self.state = np.array(self.sct.grab(
-            {"top": 0, "left": 0, "width": STATE_W, "height": STATE_H}))
+        self.state = np.array({})
+        self.camera.release()
+        cv2.destroyAllWindows()
+        # TODO:
         # release all keys
         # move mouse to 0,0
         # clear clipboard
