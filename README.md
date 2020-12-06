@@ -1,6 +1,12 @@
 # Task Learner
 Using Reinforcement Learning to achieve tasks in the digital world.
 
+## Install
+```
+pip install gym opencv-python numpy mss
+```
+or
+
 ```
 conda activate tracker
 ```

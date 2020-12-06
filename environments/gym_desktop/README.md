@@ -4,7 +4,7 @@ A gym environment that connects OS desktop with keyboard/mouse action space.
 ## Install
 
 ```
-cd environments
+cd environments/gym_desktop
 pip install -e .
 ```
 
