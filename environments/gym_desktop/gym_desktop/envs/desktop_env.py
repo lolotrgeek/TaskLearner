@@ -33,10 +33,12 @@ class KeyEvent():
 
 class PointerEvent():
     # TODO: add mousewheel or pgup pgdn keys
-    def __init__(self, x=0, y=0, buttonmask=0):
+    def __init__(self, x=0, y=0, buttonmask=0, v_wheel=0, h_wheel=0):
         self.x = x
         self.y = y
         self.buttonmask = buttonmask
+        self.v_wheel = v_wheel
+        self.h_wheel = h_wheel
 
 class SpecialEvent():
     """
@@ -191,7 +193,7 @@ class DesktopEnv(gym.Env):
     # https://stackoverflow.com/questions/59201850/how-can-i-show-an-image-in-the-same-frame-of-a-video-in-opencv-python
 
     def __init__(self):
-        self.sct = mss.mss()
+        self.sct = mss.mss(display=":0.0")
         self.start_time = time.time()
         self.time_limit = 10
         self.action_space = ActionSpace()
