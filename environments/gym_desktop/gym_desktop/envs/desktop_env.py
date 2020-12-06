@@ -266,8 +266,9 @@ class DesktopEnv(gym.Env):
     def render(self, mode='human'):
         if self.state is None:
             return None
-        # print("fps: {}".format(1 / (time.time() - self.last_time)))
-        return cv2.imshow("OpenCV/Numpy normal", self.state)
+        print("fps: {}".format(1 / (time.time() - self.last_time)))
+        # return cv2.imshow("OpenCV/Numpy normal", self.state)
+        return self.state
 
     def close(self):
         cv2.destroyAllWindows()
