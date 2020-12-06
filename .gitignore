@@ -10,3 +10,4 @@ environments/gym_desktop/gym_desktop/envs/__pycache__/__init__.cpython-38.pyc
 environments/gym_desktop/gym_desktop/__pycache__/__init__.cpython-38.pyc
 environments/gym_desktop/gym_desktop/envs/__pycache__/desktop_env.cpython-38.pyc
 environments/custom_cartpole/custom_cartpole/env/__pycache__/custom_cartpole_env.cpython-38.pyc
+environments/gym_desktop/gym_desktop/envs/utils/keyboard/pi/__pycache__/machineMapDict.cpython-38.pyc

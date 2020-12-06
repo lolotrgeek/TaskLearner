@@ -69,7 +69,6 @@ class ActionSpace(gym.Space):
 
     def __init__(self, keys=None, special=None, buttonmasks=None, screen_shape=(STATE_W, STATE_H)):
         self.keys = []
-        self.special = []
         if keys is None:
             keys = keyMap
             print('load keymap')
@@ -83,6 +82,7 @@ class ActionSpace(gym.Space):
             self.keys.append(key)
         self._key_set = set(self.keys)
 
+        self.special = []
         if special is None:
             special = specialActions
         for action in special:
@@ -212,7 +212,6 @@ class DesktopEnv(gym.Env):
             print(str(a))
             if isinstance(a, int):
                 # integers which represent key presses
-                # TODO: decode / test actual key press
                 print(str(keyMap[a]))
 
             elif isinstance(a, str):
