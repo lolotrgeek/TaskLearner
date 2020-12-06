@@ -6,6 +6,7 @@ import cv2
 import mss
 import numpy as np
 import gym_desktop.envs.utils as utils
+import faulthandler
 
 faulthandler.enable()
 keyMap = utils.keyboard.pi.machineMapDict.keys
