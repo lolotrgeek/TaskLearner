@@ -7,11 +7,13 @@ import mss
 import numpy as np
 import gym_desktop.envs.utils as utils
 
+faulthandler.enable()
 keyMap = utils.keyboard.pi.machineMapDict.keys
 specialActions = utils.keyboard.pi.machineMapDict.special
 
 STATE_W = 800
 STATE_H = 640
+
 
 
 def keycode(key):
