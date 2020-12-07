@@ -237,7 +237,7 @@ class DesktopEnv(gym.Env):
             print(str(a))
             if isinstance(a, int):
                 # integers which represent key presses
-                actions.main.key_stroke(a)
+                actions.main.key_stroke(keyMap[a])
                 print(str(keyMap[a]))
 
             elif isinstance(a, str):
