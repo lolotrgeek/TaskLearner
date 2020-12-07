@@ -29,7 +29,7 @@ def key_stroke(key_event):
         fake_keyboard.send_keystroke(keyboard_path, key_event[1], key_event[0])
     except hid_write.WriteError as e:
         logger.error('Failed to write key: %s (keycode=%d). %s',
-                     hid_keycode, e)
+                     key_event[0], e)
         return {'success': False}
     return {'success': True}
 
