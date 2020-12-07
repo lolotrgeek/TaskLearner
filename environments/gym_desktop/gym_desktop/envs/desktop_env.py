@@ -5,16 +5,18 @@ import time
 import cv2
 import mss
 import numpy as np
-import gym_desktop.envs.utils as utils
+import gym_desktop.envs.actions as actions
 import faulthandler
 
 faulthandler.enable()
-keyMap = utils.keyboard.pi.machineMapDict.keys
-specialActions = utils.keyboard.pi.machineMapDict.special
 
+# State Constants
 STATE_W = 800
 STATE_H = 640
 
+# Action Constants
+keyMap = actions.keymaps.machineMapDict.keys
+specialActions = actions.keymaps.machineMapDict.special 
 
 def keycode(key):
     if key in keyMap:
@@ -244,6 +246,7 @@ class DesktopEnv(gym.Env):
             elif isinstance(a, object):
                 # objects which represent x,y coordinate with a buttonmask (clicks)
                 # TODO: decode/test actual mouse movements
+                actions.main.mouse_event(a)
                 print(str(a.x), ',', str(a.y))
 
             else:

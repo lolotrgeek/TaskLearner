@@ -11,10 +11,12 @@ env = gym.make('Desktop-v0')
 max_ep = 10
 
 class PointerEvent():
-    def __init__(self, x=0, y=0, buttonmask=0):
+    def __init__(self, x=0, y=0, buttonmask=0, v_wheel=0, h_wheel=0):
         self.x = x
         self.y = y
         self.buttonmask = buttonmask
+        self.v_wheel = v_wheel
+        self.h_wheel =h_wheel
 
 for ep_cnt in range(max_ep):
     step_cnt = 0
@@ -23,7 +25,7 @@ for ep_cnt in range(max_ep):
     state = env.reset()
 
     while not done:
-        next_state, reward, done, _ = env.step([1, PointerEvent(x=0, y=0, buttonmask=0), "copy"])
+        next_state, reward, done, _ = env.step([1, PointerEvent(x=0, y=0, buttonmask=0 ), "copy"])
         env.render()
         step_cnt += 1
         ep_reward += reward
