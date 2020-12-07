@@ -15,8 +15,7 @@ STATE_W = 800
 STATE_H = 640
 
 # Action Constants
-keyMap = actions.keymaps.machineMapDict.keys
-specialActions = actions.keymaps.machineMapDict.special 
+keyMap = actions.keymaps.machineKeyMap.keys
 
 def keycode(key):
     if key in keyMap:
@@ -77,6 +76,7 @@ class ActionSpace(gym.Space):
     """
 
     def __init__(self, keys=None, special=None, buttonmasks=None, screen_shape=(STATE_W, STATE_H)):
+        # TODO : document & consider removing extra mapping?
         self.keys = []
         if keys is None:
             keys = keyMap
@@ -90,13 +90,6 @@ class ActionSpace(gym.Space):
             # self.keys.append(up)
             self.keys.append(key)
         self._key_set = set(self.keys)
-
-        self.special = []
-        if special is None:
-            special = specialActions
-        for action in special:
-            self.special.append(special[action])
-        self._special_set = set(self.special)
 
         self.screen_shape = screen_shape
         if self.screen_shape is not None:
@@ -239,10 +232,6 @@ class DesktopEnv(gym.Env):
                 # integers which represent key presses
                 actions.main.key_stroke(keyMap[a])
                 print(str(keyMap[a]))
-
-            elif isinstance(a, str):
-                # strings represent special actions
-                print(a)
 
             elif isinstance(a, object):
                 # objects which represent x,y coordinate with a buttonmask (clicks)

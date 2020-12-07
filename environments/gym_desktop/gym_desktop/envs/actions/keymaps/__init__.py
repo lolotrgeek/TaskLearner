@@ -1,1 +1,2 @@
-from . import machineMapDict
+from . import machineKeyMap
+from . import machineSpecialMap

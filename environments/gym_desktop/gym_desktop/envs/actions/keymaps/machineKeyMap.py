@@ -1,6 +1,8 @@
 # Source: https://gist.github.com/MightyPork/6da26e382a7ad91b5496ee55fdc73db2
 # keys 1-61 are the regular keyset 
 # keys 62-122 are the same keys with shift modifier
+# key 123 is `ctrl + c`
+# key 124 is `ctrl + v`
 keys = {
     1:	[0x04	, 0x0],
     2:	[0x05	, 0x0],
@@ -124,8 +126,6 @@ keys = {
     120:	[0x52	, 0xe1],
     121:	[0x64	, 0xe1],
     122:	[0x74	, 0xe1],
-}
-special = {
-    1: 'copy',
-    2: 'paste'
+    123: [0x06, 0xe0],
+    124: [0x13, 0xe0] 
 }

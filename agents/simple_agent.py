@@ -25,7 +25,7 @@ for ep_cnt in range(max_ep):
     state = env.reset()
 
     while not done:
-        next_state, reward, done, _ = env.step([1, PointerEvent(x=0, y=0, buttonmask=0 ), "copy"])
+        next_state, reward, done, _ = env.step([1, PointerEvent(x=0, y=0, buttonmask=0 ), 123])
         env.render()
         step_cnt += 1
         ep_reward += reward

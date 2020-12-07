@@ -1,0 +1,4 @@
+combos = {
+    "copy": [0x06, 0xe0],
+    "paste": [0x13, 0xe0] 
+}
