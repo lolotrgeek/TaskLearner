@@ -8,7 +8,8 @@ cd environments/gym_desktop
 pip install -e .
 ```
 
-To resolve imports make sure the import dot noation in the `__init__.py` files are correct and that python is running from this directory.
+## Issues
+To resolve imports make sure the import dot notion in the `__init__.py` files are correct and that python is running from this directory.
 
 ## Usage
 ```
