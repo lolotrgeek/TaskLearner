@@ -15,9 +15,18 @@ mouse_path = os.environ.get('MOUSE_PATH', '/dev/hidg1')
 keyboard_layout = os.environ.get('KEYBOARD_LAYOUT', 'QWERTY')
 
 
-def key_stroke(hid_keycode, modifiers):
+def key_stroke(key_event):
+    '''
+    Presses a key with or without a modifier.
+
+    Parameters
+    ----------
+    key_event[0]: buf, key
+
+    key_event[1]: buf, modifier
+    '''
     try:
-        fake_keyboard.send_keystroke(keyboard_path, modifiers, hid_keycode)
+        fake_keyboard.send_keystroke(keyboard_path, key_event[1], key_event[0])
     except hid_write.WriteError as e:
         logger.error('Failed to write key: %s (keycode=%d). %s',
                      hid_keycode, e)
@@ -25,7 +34,24 @@ def key_stroke(hid_keycode, modifiers):
     return {'success': True}
 
 
-def mouse_event(mouse_event):
+def mouse_action(mouse_event):
+    '''
+    Performs a mouse event.
+
+    Parameters
+    ----------
+    mouse_event - object 
+
+    mouse_event.buttonmask - int
+    
+    mouse_event.x - int  
+    
+    mouse_event.y - int
+    
+    mouse_event.v_wheel - int
+    
+    mouse_event.h_wheel - int
+    '''
     try:
         fake_mouse.send_mouse_event(
             mouse_path, mouse_event.buttonmask, mouse_event.x, mouse_event.y, mouse_event.v_wheel, mouse_event.h_wheel)

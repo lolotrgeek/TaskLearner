@@ -1,4 +1,4 @@
-Relies on [pyKeyStrokes](https://github.com/lolotrgeek/piKeyStrokes)
+Based on [pyKeyStrokes](https://github.com/lolotrgeek/piKeyStrokes)
 
 ## Usage
 `humanMap.py` is for encoding actions into human readable format

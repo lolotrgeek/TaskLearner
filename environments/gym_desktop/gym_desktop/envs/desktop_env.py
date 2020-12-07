@@ -237,6 +237,7 @@ class DesktopEnv(gym.Env):
             print(str(a))
             if isinstance(a, int):
                 # integers which represent key presses
+                actions.main.key_stroke(a)
                 print(str(keyMap[a]))
 
             elif isinstance(a, str):
@@ -246,7 +247,7 @@ class DesktopEnv(gym.Env):
             elif isinstance(a, object):
                 # objects which represent x,y coordinate with a buttonmask (clicks)
                 # TODO: decode/test actual mouse movements
-                actions.main.mouse_event(a)
+                actions.main.mouse_action(a)
                 print(str(a.x), ',', str(a.y))
 
             else:
