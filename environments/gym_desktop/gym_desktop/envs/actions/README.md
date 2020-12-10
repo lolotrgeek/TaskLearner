@@ -1,4 +1,11 @@
-Based on [pyKeyStrokes](https://github.com/lolotrgeek/piKeyStrokes)
+# gymKeyStrokes
+
+Based on [piKeyStrokes](https://github.com/lolotrgeek/piKeyStrokes)
+
+This replaces the piKeyStrokes API with a gym friendly API.
+
+## Install
+Need to install piKeyStrokes.
 
 ## Usage
 `humanMap.py` is for encoding actions into human readable format
