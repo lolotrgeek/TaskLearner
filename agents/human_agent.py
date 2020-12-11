@@ -74,29 +74,27 @@ keymap = {"a"	: 1, "b"	: 2, "c"	: 3, "d"	: 4, "e"	: 5, "f"	: 6, "g"	: 7, "h"	: 8
 mousemap = {"left": 1, "right": 2, "middle": 3}
 actions = []
 # Run Environment in Episodes
+step_cnt = 0
+ep_reward = 0
+done = False
+state = env.reset()
 
-for ep_cnt in range(max_ep):
-    step_cnt = 0
-    ep_reward = 0
-    done = False
-    state = env.reset()
+while not done:
+    next_state, reward, done, _ = env.step(actions)
+    env.render()
+    step_cnt += 1
+    ep_reward += reward
+    state = next_state
+    actions.clear()
+    # Press "esc" to quit
+    # if cv2.waitKey(25) & 0xFF == ord("esc"):
+    #     keyListener.stop()
+    #     mouseListener.stop()
+    #     env.close()
+    #     break
 
-    while not done:
-        next_state, reward, done, _ = env.step(actions)
-        env.render()
-        step_cnt += 1
-        ep_reward += reward
-        state = next_state
-        actions.clear()
-        # Press "esc" to quit
-        # if cv2.waitKey(25) & 0xFF == ord("esc"):
-        #     keyListener.stop()
-        #     mouseListener.stop()
-        #     env.close()
-        #     break
-
-    print('Episode: {}, Step count: {}, Episode reward: {}'.format(
-        ep_cnt, step_cnt, ep_reward))
+print('Episode: {}, Step count: {}, Episode reward: {}'.format(
+    1, step_cnt, ep_reward))
 
 # Stop Environment
 keyListener.stop()
