@@ -4,6 +4,7 @@ from gym.wrappers import Monitor
 import gym_desktop
 from pynput import keyboard, mouse
 
+# UNFINISHED
 # listen to physical hid event
 # convert to action [keyboard_event: int , mouse_event: PointerEvent]
 # write event to OTG
@@ -73,7 +74,7 @@ keymap = {"a"	: 1, "b"	: 2, "c"	: 3, "d"	: 4, "e"	: 5, "f"	: 6, "g"	: 7, "h"	: 8
           "9"	: 35, "0"	: 36, "enter"	: 37, "esc"	: 38, "backspace"	: 39, "tab"	: 40, "space"	: 41, "-"	: 42, "=": 43, "["	: 44, "]"	: 45, "\\"	: 46, "HASH": 47, ";"	: 48, "'"	: 49, "ACCENT_GRAVE": 50, ","	: 51, "."	: 52, "/"	: 53, "home"	: 54, "end"	: 55, "right"	: 56, "left"	: 57, "down"	: 58, "up"	: 59, "LESS_THAN"	: 60, "EXECUTE"	: 61, }
 mousemap = {"left": 1, "right": 2, "middle": 3}
 actions = []
-# Run Environment in Episodes
+# Run Environment
 step_cnt = 0
 ep_reward = 0
 done = False

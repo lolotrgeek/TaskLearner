@@ -53,6 +53,12 @@ class SpecialEvent():
     def __init__(self, action=''):
         self.action = action
 
+class WaitEvent():
+    """
+    Waiting as an action
+    """
+    def __init___(self, amount=0):
+        self.amount=amount
 
 class ActionSpace(gym.Space):
     """The space of Desktop actions.
@@ -75,7 +81,7 @@ class ActionSpace(gym.Space):
 
     """
 
-    def __init__(self, keys=None, special=None, buttonmasks=None, screen_shape=(STATE_W, STATE_H)):
+    def __init__(self, keys=None, buttonmasks=None, screen_shape=(STATE_W, STATE_H)):
         # TODO : document & consider removing extra mapping?
         self.keys = []
         if keys is None:
@@ -90,7 +96,7 @@ class ActionSpace(gym.Space):
             # self.keys.append(up)
             self.keys.append(key)
         self._key_set = set(self.keys)
-
+        self._wait = 0
         self.screen_shape = screen_shape
         if self.screen_shape is not None:
             self.buttonmasks = []
@@ -118,8 +124,8 @@ class ActionSpace(gym.Space):
                     return False
                 elif a.buttonmask not in self._buttonmask_set:
                     return False
-            elif isinstance(a, SpecialEvent):
-                if a not in self._special_set:
+            elif isinstance(a, WaitEvent):
+                if a.amount < self._wait:
                     return False
         return True
 
@@ -201,7 +207,7 @@ class DesktopEnv(gym.Env):
         # self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
         # self.sct = mss.mss()
         self.start_time = time.time()
-        self.time_limit = 10
+        self.time_limit = 1000
         self.action_space = ActionSpace()
         self.observation_space = spaces.Box(
             low=0, high=255, shape=(STATE_H, STATE_W, 3), dtype=np.uint8
@@ -227,12 +233,15 @@ class DesktopEnv(gym.Env):
         step_reward = 1
         # Actions:
         for a in action:
-            # print(str(a))
+            print(str(a))
             if isinstance(a, int):
                 # integers which represent key presses
                 actions.main.key_stroke(keyMap[a])
                 # print(str(keyMap[a]))
-
+            elif isinstance(a, dict):
+                if "wait" in a:
+                    time.sleep(a["wait"])
+                    
             elif isinstance(a, object):
                 # objects which represent x,y coordinate with a buttonmask (clicks)
                 # TODO: decode/test actual mouse movements
@@ -243,6 +252,7 @@ class DesktopEnv(gym.Env):
                 print('no action')
 
         if self.last_time - self.start_time > self.time_limit:
+            print("Ending...")
             done = True
         return self.state, step_reward, done, {}
 
@@ -268,6 +278,7 @@ class DesktopEnv(gym.Env):
             return None
         print("fps: {}".format(1 / (time.time() - self.last_time)))
         cv2.imshow("OpenCV/Numpy normal", self.state)
+        # https://raspberrypi.stackexchange.com/a/91144
         cv2.waitKey(1)
         return self.state
 
