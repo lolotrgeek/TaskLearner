@@ -227,7 +227,7 @@ class DesktopEnv(gym.Env):
         step_reward = 1
         # Actions:
         for a in action:
-            print(str(a))
+            # print(str(a))
             if isinstance(a, int):
                 # integers which represent key presses
                 actions.main.key_stroke(keyMap[a])
@@ -260,7 +260,7 @@ class DesktopEnv(gym.Env):
         if self.state is None:
             return None
         # print("fps: {}".format(1 / (time.time() - self.last_time)))
-        # return cv2.imshow("OpenCV/Numpy normal", self.state)
+        return cv2.imshow("OpenCV/Numpy normal", self.state)
         return self.state
 
     def close(self):
