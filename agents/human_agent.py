@@ -92,5 +92,5 @@ for ep_cnt in range(max_ep):
 
 # Stop Environment
 keyListener.stop()
-mouseListener.start()
+mouseListener.stop()
 env.close()
