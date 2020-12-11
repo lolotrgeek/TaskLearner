@@ -248,7 +248,7 @@ class DesktopEnv(gym.Env):
 
     def reset(self):
         # self.state = np.array({})
-        self.camera.release()
+        # self.camera.release()
         cv2.destroyAllWindows()
         ret, im = self.camera.read(0)
         if not ret:
