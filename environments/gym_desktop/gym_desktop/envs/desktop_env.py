@@ -267,8 +267,9 @@ class DesktopEnv(gym.Env):
             print('Unable to render.')
             return None
         print("fps: {}".format(1 / (time.time() - self.last_time)))
-        return cv2.imshow("OpenCV/Numpy normal", self.state)
-        # return self.state
+        cv2.imshow("OpenCV/Numpy normal", self.state)
+        cv2.waitKey(1)
+        return self.state
 
     def close(self):
         self.camera.release()
