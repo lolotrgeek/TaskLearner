@@ -15,7 +15,8 @@ class PointerEvent():
         self.y = y
         self.buttonmask = buttonmask
         self.v_wheel = v_wheel
-        self.h_wheel =h_wheel
+        self.h_wheel = h_wheel
+
 
 def on_press(key):
     '''
@@ -40,15 +41,18 @@ def on_move(x, y):
     # print('Pointer moved to {0}'.format(
     #     (x, y)))
 
+
 def on_click(x, y, button, pressed):
     actions.append(PointerEvent(x=x, y=y, buttonmask=button))
     # print('{0} at {1}'.format(
     #     'Pressed', button if pressed else 'Released', button,
     #     (x, y)))
 
+
 def on_scroll(x, y, dx, dy):
     actions.append(PointerEvent(x=x, y=y, h_wheel=dx, v_wheel=dy))
     # print('Scrolled {0}.'.format('down' if dy < 0 else 'up'), dx, dy)
+
 
 # Start Listening for Actions
 keyListener = keyboard.Listener(on_press=on_press)
@@ -66,29 +70,24 @@ keymap = {"a"	: 1, "b"	: 2, "c"	: 3, "d"	: 4, "e"	: 5, "f"	: 6, "g"	: 7, "h"	: 8
           "9"	: 35, "0"	: 36, "enter"	: 37, "esc"	: 38, "backspace"	: 39, "tab"	: 40, "space"	: 41, "-"	: 42, "=": 43, "["	: 44, "]"	: 45, "\\"	: 46, "HASH": 47, ";"	: 48, "'"	: 49, "ACCENT_GRAVE": 50, ","	: 51, "."	: 52, "/"	: 53, "home"	: 54, "end"	: 55, "right"	: 56, "left"	: 57, "down"	: 58, "up"	: 59, "LESS_THAN"	: 60, "EXECUTE"	: 61, }
 
 actions = []
-# Run Environment in a single continuous Episode
-step_cnt = 0
-ep_reward = 0
-done = False
-state = env.reset()
+# Run Environment in Episodes
 
-while not done:
-    next_state, reward, done, _ = env.step(actions)
-    env.render()
-    step_cnt += 1
-    ep_reward += reward
-    state = next_state
-    actions.clear()
-    # Press "esc" to quit
-    for action in actions:
-        if action == 37:
-            keyListener.stop()
-            mouseListener.stop()
-            env.close()
-            break
+for ep_cnt in range(max_ep):
+    step_cnt = 0
+    ep_reward = 0
+    done = False
+    state = env.reset()
 
-print('Episode: {}, Step count: {}, Episode reward: {}'.format(
-    1, step_cnt, ep_reward))
+    while not done:
+        next_state, reward, done, _ = env.step(actions)
+        env.render()
+        step_cnt += 1
+        ep_reward += reward
+        state = next_state
+        actions.clear()
+
+    print('Episode: {}, Step count: {}, Episode reward: {}'.format(
+        1, step_cnt, ep_reward))
 
 # Stop Environment
 keyListener.stop()
