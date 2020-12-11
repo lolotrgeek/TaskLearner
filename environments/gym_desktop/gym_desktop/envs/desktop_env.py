@@ -253,6 +253,7 @@ class DesktopEnv(gym.Env):
         ret, im = self.camera.read(0)
         if not ret:
             print("failed to grab frame")
+            self.state = None
         self.state = im
         # TODO:
         # release all keys
