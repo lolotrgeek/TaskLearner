@@ -37,18 +37,18 @@ def on_press(key):
 
 def on_move(x, y):
     actions.append(PointerEvent(x=x, y=y))
-    print('Pointer moved to {0}'.format(
-        (x, y)))
+    # print('Pointer moved to {0}'.format(
+    #     (x, y)))
 
 def on_click(x, y, button, pressed):
     actions.append(PointerEvent(x=x, y=y, buttonmask=button))
-    print('{0} at {1}'.format(
-        'Pressed', button if pressed else 'Released', button,
-        (x, y)))
+    # print('{0} at {1}'.format(
+    #     'Pressed', button if pressed else 'Released', button,
+    #     (x, y)))
 
 def on_scroll(x, y, dx, dy):
     actions.append(PointerEvent(x=x, y=y, h_wheel=dx, v_wheel=dy))
-    print('Scrolled {0}.'.format('down' if dy < 0 else 'up'), dx, dy)
+    # print('Scrolled {0}.'.format('down' if dy < 0 else 'up'), dx, dy)
 
 # Start Listening for Actions
 keyListener = keyboard.Listener(on_press=on_press)
