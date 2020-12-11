@@ -247,9 +247,13 @@ class DesktopEnv(gym.Env):
         return self.state, step_reward, done, {}
 
     def reset(self):
-        self.state = np.array({})
+        # self.state = np.array({})
         self.camera.release()
         cv2.destroyAllWindows()
+        ret, im = self.camera.read(0)
+        if not ret:
+            print("failed to grab frame")
+        self.state = im
         # TODO:
         # release all keys
         # move mouse to 0,0
@@ -261,7 +265,8 @@ class DesktopEnv(gym.Env):
             return None
         # print("fps: {}".format(1 / (time.time() - self.last_time)))
         return cv2.imshow("image", self.state)
-        return self.state
+        # return self.state
 
     def close(self):
+        self.camera.release()
         cv2.destroyAllWindows()
