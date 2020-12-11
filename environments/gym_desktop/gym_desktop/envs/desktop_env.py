@@ -266,7 +266,7 @@ class DesktopEnv(gym.Env):
         if self.state is None:
             print('Unable to render.')
             return None
-        # print("fps: {}".format(1 / (time.time() - self.last_time)))
+        print("fps: {}".format(1 / (time.time() - self.last_time)))
         return cv2.imshow("OpenCV/Numpy normal", self.state)
         # return self.state
 
