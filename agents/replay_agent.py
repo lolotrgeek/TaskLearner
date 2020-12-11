@@ -27,12 +27,14 @@ done = False
 state = env.reset()
 
 while not done:
-    next_state, reward, done, _ = env.step(actions)
+    if step_cnt > len(actions):
+        done = True
+        break
+    next_state, reward, done, _ = env.step([actions[step_cnt]])
     env.render()
     step_cnt += 1
     ep_reward += reward
     state = next_state
-    actions.clear()
     # Press "q" to quit
     if cv2.waitKey(25) & 0xFF == ord("q"):
         env.close()
