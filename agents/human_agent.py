@@ -45,10 +45,6 @@ def on_click(x, y, button, pressed):
     print('{0} at {1}'.format(
         'Pressed', button if pressed else 'Released', button,
         (x, y)))
-    if not pressed:
-        # Stop listener
-        print(actions)
-        return False
 
 def on_scroll(x, y, dx, dy):
     actions.append(PointerEvent(x=x, y=y, h_wheel=dx, v_wheel=dy))
@@ -84,11 +80,12 @@ while not done:
     state = next_state
     actions.clear()
     # Press "esc" to quit
-    if actions[-1] == 'esc':
-        keyListener.stop()
-        mouseListener.stop()
-        env.close()
-        break
+    for action in actions:
+        if action == 37:
+            keyListener.stop()
+            mouseListener.stop()
+            env.close()
+            break
 
 print('Episode: {}, Step count: {}, Episode reward: {}'.format(
     1, step_cnt, ep_reward))
