@@ -254,7 +254,8 @@ class DesktopEnv(gym.Env):
         if not ret:
             print("failed to grab frame")
             self.state = None
-        self.state = im
+        else:
+            self.state = im
         # TODO:
         # release all keys
         # move mouse to 0,0
