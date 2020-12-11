@@ -231,13 +231,13 @@ class DesktopEnv(gym.Env):
             if isinstance(a, int):
                 # integers which represent key presses
                 actions.main.key_stroke(keyMap[a])
-                print(str(keyMap[a]))
+                # print(str(keyMap[a]))
 
             elif isinstance(a, object):
                 # objects which represent x,y coordinate with a buttonmask (clicks)
                 # TODO: decode/test actual mouse movements
                 actions.main.mouse_action(a)
-                print(str(a.x), ',', str(a.y))
+                # print(str(a.x), ',', str(a.y))
 
             else:
                 print('no action')
@@ -259,7 +259,7 @@ class DesktopEnv(gym.Env):
     def render(self, mode='human'):
         if self.state is None:
             return None
-        print("fps: {}".format(1 / (time.time() - self.last_time)))
+        # print("fps: {}".format(1 / (time.time() - self.last_time)))
         # return cv2.imshow("OpenCV/Numpy normal", self.state)
         return self.state
 
