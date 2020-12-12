@@ -3,7 +3,8 @@ from . import write as hid_write
 
 def send_mouse_event(mouse_path, buttons, relative_x, relative_y,
                      vertical_wheel_delta, horizontal_wheel_delta):
-    x, y = _scale_mouse_coordinates(relative_x, relative_y)
+    # x, y = _scale_mouse_coordinates(relative_x, relative_y)
+    x, y = relative_x, relative_y
 
     buf = [0] * 7
     buf[0] = buttons
