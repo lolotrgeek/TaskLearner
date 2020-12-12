@@ -200,11 +200,11 @@ class DesktopEnv(gym.Env):
 
     def __init__(self):
         self.camera = cv2.VideoCapture(0)
-        # self.codec = 0x47504A4D  # MJPG
+        self.codec = 0x47504A4D  # MJPG
         # self.camera.set(cv2.CAP_PROP_FPS, 30.0)
-        # self.camera.set(cv2.CAP_PROP_FOURCC, self.codec)
-        # self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-        # self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+        self.camera.set(cv2.CAP_PROP_FOURCC, self.codec)
+        self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, STATE_W)
+        self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, STATE_H)
         # self.sct = mss.mss()
         self.start_time = time.time()
         self.time_limit = 1000
