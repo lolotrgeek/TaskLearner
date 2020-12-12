@@ -199,6 +199,7 @@ class DesktopEnv(gym.Env):
     # https://stackoverflow.com/questions/59201850/how-can-i-show-an-image-in-the-same-frame-of-a-video-in-opencv-python
 
     def __init__(self):
+        self.no_show=True
         self.camera = cv2.VideoCapture(0)
         self.codec = 0x47504A4D  # MJPG
         # self.camera.set(cv2.CAP_PROP_FPS, 30.0)
@@ -217,13 +218,13 @@ class DesktopEnv(gym.Env):
         err_msg = "%r (%s) invalid" % (action, type(action))
         assert self.action_space.contains(action), err_msg
         self.last_time = time.time()
-        self.last_action = time.time()
         if not self.camera.isOpened():
             # capture local desktop if capture card is not present
             # self.state = np.array(self.sct.grab(
             #     {"top": 0, "left": 0, "width": STATE_W, "height": STATE_H}))
             self.state=np.array({})
-            
+        elif self.no_show == True:
+            self.state=np.array({})    
         else:
             ret, im = self.camera.read(0)
             if not ret:
@@ -264,6 +265,8 @@ class DesktopEnv(gym.Env):
         if not ret:
             print("failed to grab frame")
             self.state = None
+        elif self.no_show == True:
+            self.state=np.array({})    
         else:
             self.state = im
         # TODO:
@@ -277,6 +280,8 @@ class DesktopEnv(gym.Env):
             print('Unable to render.')
             return None
         print("fps: {}".format(1 / (time.time() - self.last_time)))
+        if self.no_show == True:
+            return self.state
         cv2.imshow("OpenCV/Numpy normal", self.state)
         # https://raspberrypi.stackexchange.com/a/91144
         cv2.waitKey(1)
