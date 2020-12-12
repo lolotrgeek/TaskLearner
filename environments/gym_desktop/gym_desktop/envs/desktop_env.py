@@ -11,8 +11,8 @@ import faulthandler
 faulthandler.enable()
 
 # State Constants
-STATE_W = 800
-STATE_H = 640
+STATE_W = 1920
+STATE_H = 1080
 
 # Action Constants
 keyMap = actions.keymaps.machineKeyMap.keys
