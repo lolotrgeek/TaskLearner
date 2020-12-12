@@ -239,10 +239,11 @@ class DesktopEnv(gym.Env):
                 # integers which represent key presses
                 actions.main.key_stroke(keyMap[a])
                 # print(str(keyMap[a]))
-            # elif isinstance(a, dict):
-            #     if "wait" in a:
-            #         # TODO: move to next state but, wait x amount before taking next action...
-            #         time.sleep(a["wait"])
+            elif isinstance(a, dict):
+                if "wait" in a:
+                    # TODO: move to next state but, wait x amount before taking next action...
+                    # time.sleep(a["wait"])
+                    print('wait...')
                     
             elif isinstance(a, object):
                 # objects which represent x,y coordinate with a buttonmask (clicks)
