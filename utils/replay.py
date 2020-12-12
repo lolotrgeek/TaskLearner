@@ -122,9 +122,6 @@ actions = []
 done = False
 step_cnt = 0
 
-with open('listfile.data', 'rb') as filehandle:
-    actions = pickle.load(filehandle)
-
 class PointerEvent():
     def __init__(self, x=0, y=0, buttonmask=0, v_wheel=0, h_wheel=0):
         self.x = x
@@ -132,6 +129,9 @@ class PointerEvent():
         self.buttonmask = buttonmask
         self.v_wheel = v_wheel
         self.h_wheel = h_wheel
+
+with open('listfile.data', 'rb') as filehandle:
+    actions = pickle.load(filehandle)
 
 while not done:
     if step_cnt > len(actions):
