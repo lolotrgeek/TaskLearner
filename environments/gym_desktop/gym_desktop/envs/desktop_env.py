@@ -223,7 +223,7 @@ class DesktopEnv(gym.Env):
             # self.state = np.array(self.sct.grab(
             #     {"top": 0, "left": 0, "width": STATE_W, "height": STATE_H}))
             self.state=np.array({})
-        elif self.no_show == True:
+        elif self.no_show is True:
             self.state=np.array({})    
         else:
             ret, im = self.camera.read(0)
@@ -265,7 +265,7 @@ class DesktopEnv(gym.Env):
         if not ret:
             print("failed to grab frame")
             self.state = None
-        elif self.no_show == True:
+        elif self.no_show is True:
             self.state=np.array({})    
         else:
             self.state = im
@@ -280,11 +280,10 @@ class DesktopEnv(gym.Env):
             print('Unable to render.')
             return None
         print("fps: {}".format(1 / (time.time() - self.last_time)))
-        if self.no_show == True:
-            return self.state
-        cv2.imshow("OpenCV/Numpy normal", self.state)
-        # https://raspberrypi.stackexchange.com/a/91144
-        cv2.waitKey(1)
+        if self.no_show is False:
+            cv2.imshow("OpenCV/Numpy normal", self.state)
+            # https://raspberrypi.stackexchange.com/a/91144
+            cv2.waitKey(1)
         return self.state
 
     def close(self):
