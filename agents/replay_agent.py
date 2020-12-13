@@ -32,10 +32,6 @@ while not done:
     step_cnt += 1
     ep_reward += reward
     state = next_state
-    # Press "q" to quit
-    if cv2.waitKey(25) & 0xFF == ord("q"):
-        env.close()
-        break
 
 print('Episode: {}, Step count: {}, Episode reward: {}'.format(
     1, step_cnt, ep_reward))
