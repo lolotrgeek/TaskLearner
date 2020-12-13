@@ -40,21 +40,21 @@ def mouse_action(mouse_event):
 
     Parameters
     ----------
-    mouse_event - object 
+    mouse_event - list 
 
-    mouse_event.buttonmask - int
-    
-    mouse_event.x - int  
-    
-    mouse_event.y - int
-    
-    mouse_event.v_wheel - int
-    
-    mouse_event.h_wheel - int
+    mouse_event[0] - int, buttonmask 
+
+    mouse_event[1] - int, x  
+
+    mouse_event[2] - int, y
+
+    mouse_event[3] - int, v_wheel
+
+    mouse_event[4] - int, h_wheel
     '''
     try:
         fake_mouse.send_mouse_event(
-            mouse_path, mouse_event.buttonmask, mouse_event.x, mouse_event.y, mouse_event.v_wheel, mouse_event.h_wheel)
+            mouse_path, mouse_event[0], mouse_event[1], mouse_event[2], mouse_event[3], mouse_event[4])
     except hid_write.WriteError as e:
         logger.error('Failed to forward mouse event: %s', e)
         return {'success': False}

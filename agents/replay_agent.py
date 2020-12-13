@@ -9,14 +9,6 @@ env = gym.make('Desktop-v0')
 max_ep = 10
 actions = []
 
-class PointerEvent():
-    def __init__(self, x=0, y=0, buttonmask=0, v_wheel=0, h_wheel=0):
-        self.x = x
-        self.y = y
-        self.buttonmask = buttonmask
-        self.v_wheel = v_wheel
-        self.h_wheel = h_wheel
-
 with open('listfile.data', 'rb') as filehandle:
     actions = pickle.load(filehandle)
 
@@ -27,7 +19,7 @@ done = False
 state = env.reset()
 
 while not done:
-    if step_cnt > len(actions):
+    if step_cnt >= len(actions):
         done = True
         break
     next_state, reward, done, _ = env.step([actions[step_cnt]])
