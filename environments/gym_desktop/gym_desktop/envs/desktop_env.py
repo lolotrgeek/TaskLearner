@@ -209,13 +209,13 @@ class DesktopEnv(gym.Env):
                 return self.state, step_reward, done, {}
             elif isinstance(a, int):
                 # integers which represent key presses
-                # actions.main.key_stroke(keyMap[a])
-                print(str(keyMap[a]))
+                actions.main.key_stroke(keyMap[a])
+                # print(str(keyMap[a]))
                     
             elif isinstance(a, list):
                 # list which represent x,y coordinate with a buttonmask (clicks)
-                # actions.main.mouse_action(a)
-                print(str(a[1]), ',', str(a[2]))
+                actions.main.mouse_action(a)
+                # print(str(a[1]), ',', str(a[2]))
 
         if self.last_time - self.start_time > self.time_limit:
             print("Ending...")
