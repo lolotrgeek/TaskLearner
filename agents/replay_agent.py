@@ -5,6 +5,11 @@ import gym_desktop
 import time
 import pickle
 
+from pyinstrument import Profiler
+
+profiler = Profiler()
+profiler.start()
+
 env = gym.make('Desktop-v0')
 max_ep = 10
 actions = []
@@ -37,3 +42,7 @@ print('Episode: {}, Step count: {}, Episode reward: {}'.format(
 
 # Stop Environment
 env.close()
+
+profiler.stop()
+
+print(profiler.output_text(unicode=True, color=True))
