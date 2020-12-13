@@ -204,10 +204,9 @@ class DesktopEnv(gym.Env):
         for a in action:
             # print(str(a))
             if isinstance(a, dict):
-                if "wait" in a:
-                    # TODO: move to next state but, wait x amount before taking next action...
-                    # time.sleep(a["wait"])
-                    return self.state, step_reward, done, {}
+                # TODO: move to next state but, wait x amount before taking next action...
+                # time.sleep(a["wait"])
+                return self.state, step_reward, done, {}
             elif isinstance(a, int):
                 # integers which represent key presses
                 # actions.main.key_stroke(keyMap[a])
@@ -252,7 +251,7 @@ class DesktopEnv(gym.Env):
         if self.no_show is False:
             cv2.imshow("OpenCV/Numpy normal", self.state)
             # https://raspberrypi.stackexchange.com/a/91144
-            cv2.waitKey(1)
+            # cv2.waitKey(1)
         return self.state
 
     def close(self):
