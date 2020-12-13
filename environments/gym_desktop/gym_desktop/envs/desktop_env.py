@@ -5,8 +5,9 @@ import time
 import cv2
 import mss
 import numpy as np
-import gym_desktop.envs.actions as actions
 import faulthandler
+import gym_desktop.envs.actions as actions
+from gym_desktop.envs.events import KeyEvent, PointerEvent, WaitEvent
 
 faulthandler.enable()
 
@@ -25,40 +26,6 @@ def keycode(key):
             'Not sure how to translate to keycode: {!r}'.format(key))
 
 
-class KeyEvent():
-    """
-    The KeyEvent consumes a key int
-    """
-
-    def __init__(self, key=0):
-        self.key = key
-
-
-class PointerEvent():
-    # TODO: add mousewheel or pgup pgdn keys
-    def __init__(self, x=0, y=0, buttonmask=0, v_wheel=0, h_wheel=0):
-        self.x = x
-        self.y = y
-        self.buttonmask = buttonmask
-        self.v_wheel = v_wheel
-        self.h_wheel = h_wheel
-
-
-class SpecialEvent():
-    """
-    The SpecialEvent consumes an action string
-    """
-    # TODO: maybe better to encode as int for efficiency?
-
-    def __init__(self, action=''):
-        self.action = action
-
-class WaitEvent():
-    """
-    Waiting as an action
-    """
-    def __init___(self, amount=0):
-        self.amount=amount
 
 class ActionSpace(gym.Space):
     """The space of Desktop actions.
@@ -243,14 +210,13 @@ class DesktopEnv(gym.Env):
                     return self.state, step_reward, done, {}
             elif isinstance(a, int):
                 # integers which represent key presses
-                actions.main.key_stroke(keyMap[a])
-                # print(str(keyMap[a]))
+                # actions.main.key_stroke(keyMap[a])
+                print(str(keyMap[a]))
                     
-            elif isinstance(a, object):
-                # objects which represent x,y coordinate with a buttonmask (clicks)
-                # TODO: decode/test actual mouse movements
-                actions.main.mouse_action(a)
-                # print(str(a.x), ',', str(a.y))
+            elif isinstance(a, list):
+                # list which represent x,y coordinate with a buttonmask (clicks)
+                # actions.main.mouse_action(a)
+                print(str(a[1]), ',', str(a[2]))
 
         if self.last_time - self.start_time > self.time_limit:
             print("Ending...")
@@ -262,11 +228,11 @@ class DesktopEnv(gym.Env):
         # self.camera.release()
         cv2.destroyAllWindows()
         ret, im = self.camera.read(0)
-        if not ret:
+        if self.no_show is True:
+            self.state=np.array({})   
+        elif not ret:
             print("failed to grab frame")
             self.state = None
-        elif self.no_show is True:
-            self.state=np.array({})    
         else:
             self.state = im
         # TODO:
@@ -279,7 +245,10 @@ class DesktopEnv(gym.Env):
         if self.state is None:
             print('Unable to render.')
             return None
-        print("fps: {}".format(1 / (time.time() - self.last_time)))
+        try:
+            print("fps: {}".format(1 / (time.time() - self.last_time)))
+        except ZeroDivisionError:
+            pass
         if self.no_show is False:
             cv2.imshow("OpenCV/Numpy normal", self.state)
             # https://raspberrypi.stackexchange.com/a/91144

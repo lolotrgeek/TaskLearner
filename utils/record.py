@@ -11,18 +11,12 @@ actions = []
 last_action = time.time()
 done = False
 
-class PointerEvent():
-    def __init__(self, x=0, y=0, buttonmask=0, v_wheel=0, h_wheel=0):
-        self.x = x
-        self.y = y
-        self.buttonmask = buttonmask
-        self.v_wheel = v_wheel
-        self.h_wheel = h_wheel
 
 def action():
     global last_action
-    actions.append({"wait": time.time() - last_action })
+    actions.append({"wait": time.time() - last_action})
     last_action = time.time()
+
 
 def on_press(key):
     global done
@@ -36,7 +30,7 @@ def on_press(key):
     print(key)
     if key == "esc":
         done = True
-        print('Done:' , str(done))
+        print('Done:', str(done))
         return False
 
     try:
@@ -45,10 +39,11 @@ def on_press(key):
     except KeyError:
         print('special key')
 
+
 def on_move(x, y):
     action()
     # actions.append({"x":x, "y":y, "buttonmask":0, "v_wheel":0, "h_wheel":0})
-    actions.append(PointerEvent(x=x, y=y))
+    actions.append([0, x, y, 0, 0])
     print('Pointer moved to {0}'.format(
         (x, y)))
 
@@ -59,7 +54,7 @@ def on_click(x, y, button, pressed):
     if btn_name is True:
         btn = str(str(button).split('.')[1])
         # actions.append({"x":x, "y":y, "buttonmask":mousemap[btn], "v_wheel":0, "h_wheel":0})
-        actions.append(PointerEvent(x=x, y=y, buttonmask=mousemap[btn]))
+        actions.append([mousemap[btn], x, y,  0, 0])
 
     print('{0} at {1}'.format(
         'Pressed', button if pressed else 'Released', button,
@@ -69,7 +64,7 @@ def on_click(x, y, button, pressed):
 def on_scroll(x, y, dx, dy):
     action()
     # actions.append({"x":x, "y":y, "buttonmask":0, "v_wheel":dy, "h_wheel":dx})
-    actions.append(PointerEvent(x=x, y=y, h_wheel=dx, v_wheel=dy))
+    actions.append([0, x, y, dy, dx])
     print('Scrolled {0}.'.format('down' if dy < 0 else 'up'), dx, dy)
 
 
