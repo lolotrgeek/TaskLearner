@@ -8,6 +8,7 @@ import numpy as np
 import faulthandler
 import gym_desktop.envs.actions as actions
 from gym_desktop.envs.events import KeyEvent, PointerEvent, WaitEvent
+from imutils.video import WebcamVideoStream
 
 faulthandler.enable()
 
@@ -167,12 +168,13 @@ class DesktopEnv(gym.Env):
 
     def __init__(self):
         self.no_show=False
-        self.camera = cv2.VideoCapture(0)
-        self.codec = 0x47504A4D  # MJPG
+        # self.camera = cv2.VideoCapture(0)
+        # self.codec = 0x47504A4D  # MJPG
         # self.camera.set(cv2.CAP_PROP_FPS, 30.0)
-        self.camera.set(cv2.CAP_PROP_FOURCC, self.codec)
-        self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, STATE_W)
-        self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, STATE_H)
+        # self.camera.set(cv2.CAP_PROP_FOURCC, self.codec)
+        # self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, STATE_W)
+        # self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, STATE_H)
+        self.camera = VideoStream(src=0).start()
         # self.sct = mss.mss()
         self.start_time = time.time()
         self.time_limit = 1000
@@ -191,10 +193,13 @@ class DesktopEnv(gym.Env):
             #     {"top": 0, "left": 0, "width": STATE_W, "height": STATE_H}))
             self.state=np.array({})
         elif self.no_show is False:
-            ret, im = self.camera.read(0)
-            if not ret:
-                print("failed to grab frame")
-            self.state = im
+            # ret, im = self.camera.read(0)
+            # if not ret:
+            #     print("failed to grab frame")
+            # self.state = im
+
+            frame = self.camera.read()
+            self.state = imutils.resize(frame, width=STATE_W)
         else:
             self.state=np.array({})    
 
@@ -247,12 +252,13 @@ class DesktopEnv(gym.Env):
         except ZeroDivisionError:
             pass
         if self.no_show is False:
-            cv2.imshow("OpenCV/Numpy normal", self.state)
+            # cv2.imshow("OpenCV/Numpy normal", self.state)
+            cv2.imshow("Frame", self.state)
             # https://raspberrypi.stackexchange.com/a/91144
-            cv2.waitKey(1)
+            # cv2.waitKey(1)
         return self.state
 
     def close(self):
         actions.main.key_release()
-        self.camera.release()
+        self.camera.stop()
         cv2.destroyAllWindows()
