@@ -8,6 +8,7 @@ import numpy as np
 import faulthandler
 import gym_desktop.envs.actions as actions
 from gym_desktop.envs.events import KeyEvent, PointerEvent, WaitEvent
+import imutils
 from imutils.video import WebcamVideoStream
 
 faulthandler.enable()
