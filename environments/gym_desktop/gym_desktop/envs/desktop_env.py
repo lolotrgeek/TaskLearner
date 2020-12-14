@@ -188,12 +188,12 @@ class DesktopEnv(gym.Env):
         err_msg = "%r (%s) invalid" % (action, type(action))
         assert self.action_space.contains(action), err_msg
         self.last_time = time.time()
-        if not self.camera.isOpened():
+        # if not self.camera.isOpened():
             # capture local desktop if capture card is not present
             # self.state = np.array(self.sct.grab(
             #     {"top": 0, "left": 0, "width": STATE_W, "height": STATE_H}))
-            self.state=np.array({})
-        elif self.no_show is False:
+            # self.state=np.array({})
+        if self.no_show is False:
             # ret, im = self.camera.read(0)
             # if not ret:
             #     print("failed to grab frame")
