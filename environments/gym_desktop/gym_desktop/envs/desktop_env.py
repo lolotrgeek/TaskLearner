@@ -190,13 +190,13 @@ class DesktopEnv(gym.Env):
             # self.state = np.array(self.sct.grab(
             #     {"top": 0, "left": 0, "width": STATE_W, "height": STATE_H}))
             self.state=np.array({})
-        elif self.no_show is True:
-            self.state=np.array({})    
-        else:
+        elif self.no_show is False:
             ret, im = self.camera.read(0)
             if not ret:
                 print("failed to grab frame")
             self.state = im
+        else:
+            self.state=np.array({})    
 
         done = False
         step_reward = 1
@@ -223,18 +223,18 @@ class DesktopEnv(gym.Env):
         return self.state, step_reward, done, {}
 
     def reset(self):
-        self.camera.release()
+        # self.camera.release()
         actions.main.key_release()
         actions.main.mouse_action([0,0,0,0,0])
         cv2.destroyAllWindows()
         ret, im = self.camera.read(0)
-        if self.no_show is True:
-            self.state=np.array({})   
+        if self.no_show is False:
+            self.state = im
         elif not ret:
             print("failed to grab frame")
             self.state = None
         else:
-            self.state = im
+            self.state=np.array({})   
         # TODO: clear clipboard
         return self.state
 
