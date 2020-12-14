@@ -224,7 +224,7 @@ class DesktopEnv(gym.Env):
 
     def reset(self):
         self.camera.release()
-        actions.key_release()
+        actions.main.key_release()
         actions.main.mouse_action([0,0,0,0,0])
         cv2.destroyAllWindows()
         ret, im = self.camera.read(0)
