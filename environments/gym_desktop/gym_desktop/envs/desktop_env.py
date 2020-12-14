@@ -232,12 +232,15 @@ class DesktopEnv(gym.Env):
         actions.main.key_release()
         actions.main.mouse_action([0,0,0,0,0])
         cv2.destroyAllWindows()
-        ret, im = self.camera.read(0)
+        # ret, im = self.camera.read(0)
+        # if self.no_show is False:
+        #     self.state = im
+        # elif not ret:
+        #     print("failed to grab frame")
+        #     self.state = None
         if self.no_show is False:
-            self.state = im
-        elif not ret:
-            print("failed to grab frame")
-            self.state = None
+            frame = self.camera.read()
+            self.state = imutils.resize(frame, width=STATE_W)
         else:
             self.state=np.array({})   
         # TODO: clear clipboard
