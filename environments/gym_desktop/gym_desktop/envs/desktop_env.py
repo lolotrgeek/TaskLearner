@@ -223,8 +223,9 @@ class DesktopEnv(gym.Env):
         return self.state, step_reward, done, {}
 
     def reset(self):
-        # self.state = np.array({})
-        # self.camera.release()
+        self.camera.release()
+        actions.key_release()
+        actions.main.mouse_action([0,0,0,0,0])
         cv2.destroyAllWindows()
         ret, im = self.camera.read(0)
         if self.no_show is True:
@@ -234,10 +235,7 @@ class DesktopEnv(gym.Env):
             self.state = None
         else:
             self.state = im
-        # TODO:
-        # release all keys
-        # move mouse to 0,0
-        # clear clipboard
+        # TODO: clear clipboard
         return self.state
 
     def render(self, mode='human'):
@@ -255,5 +253,6 @@ class DesktopEnv(gym.Env):
         return self.state
 
     def close(self):
+        actions.key_release()
         self.camera.release()
         cv2.destroyAllWindows()
