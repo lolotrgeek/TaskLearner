@@ -259,7 +259,7 @@ class DesktopEnv(gym.Env):
             # cv2.imshow("OpenCV/Numpy normal", self.state)
             cv2.imshow("Frame", self.state)
             # https://raspberrypi.stackexchange.com/a/91144
-            # cv2.waitKey(1)
+            cv2.waitKey(1)
         return self.state
 
     def close(self):
