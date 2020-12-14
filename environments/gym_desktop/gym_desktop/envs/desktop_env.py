@@ -200,7 +200,8 @@ class DesktopEnv(gym.Env):
             # self.state = im
 
             frame = self.camera.read()
-            self.state = imutils.resize(frame, width=STATE_W)
+            # self.state = imutils.resize(frame, width=STATE_W)
+            self.state = frame
         else:
             self.state=np.array({})    
 
@@ -241,7 +242,8 @@ class DesktopEnv(gym.Env):
         #     self.state = None
         if self.no_show is False:
             frame = self.camera.read()
-            self.state = imutils.resize(frame, width=STATE_W)
+            # self.state = imutils.resize(frame, width=STATE_W)
+            self.state = frame
         else:
             self.state=np.array({})   
         # TODO: clear clipboard
