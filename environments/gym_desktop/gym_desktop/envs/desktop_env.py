@@ -174,7 +174,7 @@ class DesktopEnv(gym.Env):
         # self.camera.set(cv2.CAP_PROP_FOURCC, self.codec)
         # self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, STATE_W)
         # self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, STATE_H)
-        self.camera = VideoStream(src=0).start()
+        self.camera = WebcamVideoStream(src=0).start()
         # self.sct = mss.mss()
         self.start_time = time.time()
         self.time_limit = 1000
