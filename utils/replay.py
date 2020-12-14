@@ -24,30 +24,6 @@ def _write_to_hid_interface_immediately(hid_path, buffer):
             hid_path)
 
 
-def write_to_hid_interface(hid_path, buffer):
-    # Avoid an unnecessary string formatting call in a write that requires low
-    # latency.
-    if logger.getEffectiveLevel() == logging.DEBUG:
-        logger.debug('writing to HID interface %s: %s', hid_path,
-                     ' '.join(['0x%02x' % x for x in buffer]))
-    # Writes can hang, for example, when TinyPilot is attempting to write to the
-    # mouse interface, but the target system has no GUI. To avoid locking up the
-    # main server process, perform the HID interface I/O in a separate process.
-    write_process = multiprocessing.Process(
-        target=_write_to_hid_interface_immediately,
-        args=(hid_path, buffer),
-        daemon=True)
-    write_process.start()
-    write_process.join(timeout=0.5)
-    # If the process is still alive, it means the write failed to complete in
-    # time.
-    if write_process.is_alive():
-        write_process.kill()
-        _wait_for_process_exit(write_process)
-        raise WriteError(
-            'Failed to write to HID interface: %s. Is USB cable connected?' %
-            hid_path)
-
 
 def _wait_for_process_exit(target_process):
     max_attempts = 3
@@ -68,7 +44,7 @@ def send_mouse_event(mouse_path, buttons, relative_x, relative_y,
     buf[4] = (y >> 8) & 0xff
     buf[5] = vertical_wheel_delta & 0xff
     buf[6] = horizontal_wheel_delta & 0xff
-    write_to_hid_interface(mouse_path, buf)
+    _write_to_hid_interface_immediately(mouse_path, buf)
 
 
 def _scale_mouse_coordinates(relative_x, relative_y):
@@ -103,7 +79,7 @@ def send_keystroke(keyboard_path, control_keys, hid_keycode):
     buf = [0] * 8
     buf[0] = control_keys
     buf[2] = hid_keycode
-    write_to_hid_interface(keyboard_path, buf)
+    _write_to_hid_interface_immediately(keyboard_path, buf)
 
     # If it's not a modifier keycode, add a message indicating that the key
     # should be released after it is sent.
@@ -112,7 +88,7 @@ def send_keystroke(keyboard_path, control_keys, hid_keycode):
 
 
 def release_keys(keyboard_path):
-    write_to_hid_interface(keyboard_path, [0] * 8)
+    _write_to_hid_interface_immediately(keyboard_path, [0] * 8)
 
 ## START REPLAYER
 keyboard_path = os.environ.get('KEYBOARD_PATH', '/dev/hidg0')
@@ -121,14 +97,6 @@ keyboard_layout = os.environ.get('KEYBOARD_LAYOUT', 'QWERTY')
 actions = []
 done = False
 step_cnt = 0
-
-class PointerEvent():
-    def __init__(self, x=0, y=0, buttonmask=0, v_wheel=0, h_wheel=0):
-        self.x = x
-        self.y = y
-        self.buttonmask = buttonmask
-        self.v_wheel = v_wheel
-        self.h_wheel = h_wheel
 
 with open('listfile.data', 'rb') as filehandle:
     actions = pickle.load(filehandle)
