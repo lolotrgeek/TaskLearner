@@ -166,7 +166,7 @@ class DesktopEnv(gym.Env):
     # https://stackoverflow.com/questions/59201850/how-can-i-show-an-image-in-the-same-frame-of-a-video-in-opencv-python
 
     def __init__(self):
-        self.no_show=True
+        self.no_show=False
         self.camera = cv2.VideoCapture(0)
         self.codec = 0x47504A4D  # MJPG
         # self.camera.set(cv2.CAP_PROP_FPS, 30.0)
