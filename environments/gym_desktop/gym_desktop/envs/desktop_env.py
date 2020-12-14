@@ -253,6 +253,6 @@ class DesktopEnv(gym.Env):
         return self.state
 
     def close(self):
-        actions.key_release()
+        actions.main.key_release()
         self.camera.release()
         cv2.destroyAllWindows()
