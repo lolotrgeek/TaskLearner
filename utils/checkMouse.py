@@ -55,7 +55,7 @@ while True:
         keyListener.stop()
         mouseListener.stop()
         # print(actions)
-        with open('listfile.txt', 'w') as filehandle:
+        with open('actionsReceived.txt', 'w') as filehandle:
             for listitem in actions:
                 filehandle.write('%s\n' % listitem)
         break
