@@ -33,15 +33,15 @@ def _wait_for_process_exit(target_process):
 
 def send_mouse_event(mouse_path, buttons, relative_x, relative_y,
                      vertical_wheel_delta, horizontal_wheel_delta):
-    x, y = _scale_mouse_coordinates(relative_x, relative_y)
-    # x, y = relative_x, relative_y
+    # x, y = _scale_mouse_coordinates(relative_x, relative_y)
+    x, y = relative_x, relative_y
 
     buf = [0] * 7
     buf[0] = buttons
     buf[1] = x & 0xff
-    buf[2] = (x >> 8) & 0xff
+    buf[2] = x & 0xff
     buf[3] = y & 0xff
-    buf[4] = (y >> 8) & 0xff
+    buf[4] = y & 0xff
     buf[5] = vertical_wheel_delta & 0xff
     buf[6] = horizontal_wheel_delta & 0xff
     _write_to_hid_interface_immediately(mouse_path, buf)
