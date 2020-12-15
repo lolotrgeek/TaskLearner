@@ -33,8 +33,8 @@ def _wait_for_process_exit(target_process):
 
 def send_mouse_event(mouse_path, buttons, relative_x, relative_y,
                      vertical_wheel_delta, horizontal_wheel_delta):
-    # x, y = _scale_mouse_coordinates(relative_x, relative_y)
-    x, y = relative_x, relative_y
+    x, y = _scale_mouse_coordinates(relative_x, relative_y)
+    # x, y = relative_x, relative_y
 
     buf = [0] * 7
     buf[0] = buttons
@@ -95,7 +95,6 @@ keyboard_path = os.environ.get('KEYBOARD_PATH', '/dev/hidg0')
 mouse_path = os.environ.get('MOUSE_PATH', '/dev/hidg1')
 keyboard_layout = os.environ.get('KEYBOARD_LAYOUT', 'QWERTY')
 # actions = []
-done = False
 step_cnt = 0
 
 
