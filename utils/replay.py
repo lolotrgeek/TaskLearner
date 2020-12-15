@@ -36,14 +36,12 @@ def send_mouse_event(mouse_path, buttons, relative_x, relative_y,
     # x, y = _scale_mouse_coordinates(relative_x, relative_y)
     x, y = relative_x, relative_y
 
-    buf = [0] * 7
+    buf = [0] * 5
     buf[0] = buttons
     buf[1] = x & 0xff
-    buf[2] = x & 0xff
-    buf[3] = y & 0xff
-    buf[4] = y & 0xff
-    buf[5] = vertical_wheel_delta & 0xff
-    buf[6] = horizontal_wheel_delta & 0xff
+    buf[2] = y & 0xff
+    buf[3] = vertical_wheel_delta & 0xff
+    buf[4] = horizontal_wheel_delta & 0xff
     _write_to_hid_interface_immediately(mouse_path, buf)
 
 
