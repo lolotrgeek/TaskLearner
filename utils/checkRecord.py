@@ -9,4 +9,6 @@ with open('listfile.data', 'rb') as filehandle:
 
 
 with open('actionsRecorded.txt', 'w') as filehandle:
-    filehandle.writelines("%s\n" % action for action in actions)
+    for action in actions:
+        if isinstance(action, list):
+            filehandle.writelines("%s\n" % action)
