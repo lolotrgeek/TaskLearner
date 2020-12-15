@@ -80,21 +80,28 @@ class ActionSpace(gym.Space):
             return False
 
         for a in action:
-            if isinstance(a, KeyEvent):
+            if isinstance(a, int):
+                # KeyEvent
                 if a not in self._key_set:
                     return False
-            elif isinstance(a, PointerEvent):
+            elif isinstance(a, list):
+                # PointerEvent
+                # a[0] - int, buttonmask 
+                # a[1] - int, x  
+                # a[2] - int, y
+                # a[3] - int, v_wheel
+                # a[4] - int, h_wheel
                 if self.screen_shape is None:
                     return False
-
-                if a.x < 0 or a.x > self.screen_shape[0]:
+                if a[1] < 0 or a[1] > self.screen_shape[0]:
                     return False
-                elif a.y < 0 or a.y > self.screen_shape[1]:
+                elif a[2] < 0 or a[2] > self.screen_shape[1]:
                     return False
-                elif a.buttonmask not in self._buttonmask_set:
+                elif a[0] not in self._buttonmask_set:
                     return False
-            elif isinstance(a, WaitEvent):
-                if a.amount < self._wait:
+            elif isinstance(a, dict):
+                # WaitEvent
+                if a['wait'] < self._wait:
                     return False
         return True
 
@@ -113,8 +120,8 @@ class ActionSpace(gym.Space):
             x = self.np_random.randint(self.screen_shape[0])
             y = self.np_random.randint(self.screen_shape[1])
             buttonmask = self.np_random.choice(self.buttonmasks)
-
-            event = [PointerEvent(x, y, buttonmask)]
+            # event = [PointerEvent(x, y, buttonmask)]
+            event = [[buttonmask,x,y,0,0]]
             # event = []
         return event
 
