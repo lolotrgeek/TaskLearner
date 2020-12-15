@@ -94,17 +94,16 @@ def release_keys(keyboard_path):
 keyboard_path = os.environ.get('KEYBOARD_PATH', '/dev/hidg0')
 mouse_path = os.environ.get('MOUSE_PATH', '/dev/hidg1')
 keyboard_layout = os.environ.get('KEYBOARD_LAYOUT', 'QWERTY')
-actions = []
+# actions = []
 done = False
 step_cnt = 0
+
 
 with open('listfile.data', 'rb') as filehandle:
     actions = pickle.load(filehandle)
 
-while not done:
-    if step_cnt > len(actions):
-        done = True
-        break
+    print(step_cnt, len(actions))
+    while step_cnt <= len(actions):
         for a in actions:
             if isinstance(a, dict):
                 if "wait" in a:
@@ -116,8 +115,9 @@ while not done:
                 # actions.main.key_stroke(keyMap[a])
                 # print(str(keyMap[a]))
                     print(a)
-            elif isinstance(a, object):
+            elif isinstance(a, list):
                 # objects which represent x,y coordinate with a buttonmask (clicks)
                 # TODO: decode/test actual mouse movements
-                send_mouse_event(mouse_path, a.buttonmask, a.x, a.y, a.v_wheel, a.h_wheel)
-    step_cnt += 1
+                send_mouse_event(mouse_path, a[0], a[1], a[2], a[3], a[4])
+                # print(a)
+        step_cnt += 1
