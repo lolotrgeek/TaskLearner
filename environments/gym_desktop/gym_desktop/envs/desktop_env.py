@@ -226,7 +226,7 @@ class DesktopEnv(gym.Env):
         if self.no_show is False:
             frame = self.camera.read()
             # TODO: optimize resizing, implment CaptureStream.py?
-            # self.state = imutils.resize(frame, width=STATE_W)
+            self.state = imutils.resize(frame, width=STATE_W)
             self.state = frame
         else:
             self.state=np.array({})   
