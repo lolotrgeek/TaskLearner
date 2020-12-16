@@ -49,7 +49,6 @@ class ActionSpace(gym.Space):
         screen_shape (int, int): The X and Y dimensions of the screen
 
     """
-
     def __init__(self, keys=None, buttonmasks=None, screen_shape=(STATE_W, STATE_H)):
         # TODO : document & consider removing extra mapping?
         self.keys = []
@@ -57,15 +56,11 @@ class ActionSpace(gym.Space):
             keys = keyMap
             print('load keymap')
         for key in keys:
-            # print('setting keys')
-            # keys[key]
-            # down = KeyEvent.by_name(key, down=True)
-            # up = vnc_event.KeyEvent.by_name(key, down=False)
-            # self.keys.append(down)
-            # self.keys.append(up)
             self.keys.append(key)
         self._key_set = set(self.keys)
+
         self._wait = 0
+
         self.screen_shape = screen_shape
         if self.screen_shape is not None:
             self.buttonmasks = []
@@ -170,12 +165,13 @@ class DesktopEnv(gym.Env):
 
     # "rgb_array" returns "numpy.ndarray"
 
-    def __init__(self):
-        self.no_show=True
+    def __init__(self, noShow=True, debug=False):
+        self.debug=debug
+        self.no_show=noShow
         self.camera = WebcamVideoStream(src=0).start()
         self.start_time = time.time()
         self.time_limit = 1000
-        self.action_space = ActionSpace()
+        self.action_space = ActionSpace(buttonmasks=[0,1,2,4]) # [none, left, right, middle]
         self.observation_space = spaces.Box(
             low=0, high=255, shape=(STATE_H, STATE_W, 3), dtype=np.uint8
         )
@@ -199,15 +195,21 @@ class DesktopEnv(gym.Env):
                 # TODO: move to next state but, wait x amount before taking next action...
                 # time.sleep(a["wait"])
                 return self.state, step_reward, done, {}
+                
             elif isinstance(a, int):
                 # integers which represent key presses
+                if self.debug is True:
+                    print(str(keyMap[a]))
+                    pass
                 actions.main.key_stroke(keyMap[a])
-                # print(str(keyMap[a]))
                     
             elif isinstance(a, list):
                 # list which represent x,y coordinate with a buttonmask (clicks)
+                if self.debug is True:
+                    print(str(a[1]), ',', str(a[2]))
+                    pass
                 actions.main.mouse_action(a)
-                # print(str(a[1]), ',', str(a[2]))
+                
 
         if self.last_time - self.start_time > self.time_limit:
             print("Ending...")
