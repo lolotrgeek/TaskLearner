@@ -14,8 +14,8 @@ from imutils.video import WebcamVideoStream
 faulthandler.enable()
 
 # State Constants
-STATE_W = 800   
-STATE_H = 640
+STATE_W = 1920   
+STATE_H = 1080
 
 # Action Constants
 keyMap = actions.keymaps.machineKeyMap.keys
@@ -132,14 +132,12 @@ class DesktopEnv(gym.Env):
       A Desktop GUI is rendered and the agent is given a task to complete. The agent submits states
       it believes to solve the task to a validation function. The validation function returns a boolean,
       true when the task is complete.
-
+    
     Source:
-
 
     Observation:
       Type: Box(n)
       Size of window
-
 
     Actions:
       Type: Discrete(126)
@@ -171,19 +169,10 @@ class DesktopEnv(gym.Env):
     metadata = {'render.modes': ['human', "rgb_array", "state_pixels"]}
 
     # "rgb_array" returns "numpy.ndarray"
-    # show image in same window like a video
-    # https://stackoverflow.com/questions/59201850/how-can-i-show-an-image-in-the-same-frame-of-a-video-in-opencv-python
 
     def __init__(self):
         self.no_show=True
-        # self.camera = cv2.VideoCapture(0)
-        # self.codec = 0x47504A4D  # MJPG
-        # self.camera.set(cv2.CAP_PROP_FPS, 30.0)
-        # self.camera.set(cv2.CAP_PROP_FOURCC, self.codec)
-        # self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, STATE_W)
-        # self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, STATE_H)
         self.camera = WebcamVideoStream(src=0).start()
-        # self.sct = mss.mss()
         self.start_time = time.time()
         self.time_limit = 1000
         self.action_space = ActionSpace()
@@ -195,19 +184,8 @@ class DesktopEnv(gym.Env):
         err_msg = "%r (%s) invalid" % (action, type(action))
         assert self.action_space.contains(action), err_msg
         self.last_time = time.time()
-        # if not self.camera.isOpened():
-            # capture local desktop if capture card is not present
-            # self.state = np.array(self.sct.grab(
-            #     {"top": 0, "left": 0, "width": STATE_W, "height": STATE_H}))
-            # self.state=np.array({})
         if self.no_show is False:
-            # ret, im = self.camera.read(0)
-            # if not ret:
-            #     print("failed to grab frame")
-            # self.state = im
-
             frame = self.camera.read()
-            # self.state = imutils.resize(frame, width=STATE_W)
             self.state = frame
         else:
             self.state=np.array({})    
@@ -237,18 +215,12 @@ class DesktopEnv(gym.Env):
         return self.state, step_reward, done, {}
 
     def reset(self):
-        # self.camera.release()
         actions.main.key_release()
         actions.main.mouse_action([0,0,0,0,0])
         cv2.destroyAllWindows()
-        # ret, im = self.camera.read(0)
-        # if self.no_show is False:
-        #     self.state = im
-        # elif not ret:
-        #     print("failed to grab frame")
-        #     self.state = None
         if self.no_show is False:
             frame = self.camera.read()
+            # TODO: optimize resizing, implment CaptureStream.py?
             # self.state = imutils.resize(frame, width=STATE_W)
             self.state = frame
         else:
@@ -265,9 +237,7 @@ class DesktopEnv(gym.Env):
         except ZeroDivisionError:
             pass
         if self.no_show is False:
-            # cv2.imshow("OpenCV/Numpy normal", self.state)
             cv2.imshow("Frame", self.state)
-            # https://raspberrypi.stackexchange.com/a/91144
             cv2.waitKey(1)
         return self.state
 
