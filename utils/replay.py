@@ -33,17 +33,31 @@ def _wait_for_process_exit(target_process):
 
 def send_mouse_event(mouse_path, buttons, relative_x, relative_y,
                      vertical_wheel_delta, horizontal_wheel_delta):
+    """
+    https://wiki.osdev.org/Mouse_Input
+    """
     # x, y = _scale_mouse_coordinates(relative_x, relative_y)
     x, y = relative_x, relative_y
 
-    buf = [0] * 5
-    buf[0] = buttons
-    buf[1] = x & 0xff
-    buf[2] = y & 0xff
-    buf[3] = vertical_wheel_delta & 0xff
-    buf[4] = horizontal_wheel_delta & 0xff
+    # buf = [0] * 7
+    # buf[0] = buttons # Middle = bit 2 (value=4), right = bit 1 (value=2), left = bit 0 (value=1).
+    # buf[1] = x & 0xff # "delta X" value
+    # buf[2] = (x >> 8) & 0xff 
+    # buf[3] = y & 0xff # "delta y" value
+    # buf[4] = (y >> 8) & 0xff
+    # buf[5] = vertical_wheel_delta & 0xff
+    # buf[6] = horizontal_wheel_delta & 0xff
+    # print(bytearray(buf))
+    buf = [0] * 6
+    buf[0] = buttons # Middle = bit 2 (value=4), right = bit 1 (value=2), left = bit 0 (value=1).
+    buf[1] = x # "delta X" value
+    buf[2] = y # "delta y" value
+    print(bytearray(buf))
     _write_to_hid_interface_immediately(mouse_path, buf)
 
+
+
+    #NOTE: Typical values for deltaX and deltaY are 1 or 2 for slow movement, and perhaps 20 for very fast movement. Maximum possible values are +255 to -256 (they are 9-bit quantities, two's complement).
 
 def _scale_mouse_coordinates(relative_x, relative_y):
     # This comes from LOGICAL_MAXIMUM in the mouse HID descriptor.
