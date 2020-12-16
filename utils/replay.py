@@ -37,9 +37,9 @@ def send_mouse_event(mouse_path, buttons, relative_x, relative_y,
 
     buf = [0] * 7
     buf[0] = buttons # Middle = bit 2 (value=4), right = bit 1 (value=2), left = bit 0 (value=1).
-    buf[1] = relative_x & 0xff # "delta X" value
+    buf[1] = x & 0xff # "delta X" value
     buf[2] = (x >> 8) & 0xff 
-    buf[3] = relative_y & 0xff # "delta y" value
+    buf[3] = y & 0xff # "delta y" value
     buf[4] = (y >> 8) & 0xff
     buf[5] = vertical_wheel_delta & 0xff
     buf[6] = horizontal_wheel_delta & 0xff
