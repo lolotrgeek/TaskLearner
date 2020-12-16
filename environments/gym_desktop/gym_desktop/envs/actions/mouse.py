@@ -19,6 +19,11 @@ def send_mouse_event(mouse_path, buttons, relative_x, relative_y,
     buf[4] = (y >> 8) & 0xff
     buf[5] = vertical_wheel_delta & 0xff
     buf[6] = horizontal_wheel_delta & 0xff
+
+    #NOTE: maybe possible to optmize with the following: 
+    # 1. pre-scaling coords on record
+    # 2. writing bytes explicitly without constructing a bytearray
+
     # hid_write.write_to_hid_interface(mouse_path, buf)
     hid_write._write_to_hid_interface_immediately(mouse_path, buf)
 
