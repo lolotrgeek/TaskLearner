@@ -24,7 +24,7 @@ def relative_pos(pos, total):
 
 def action():
     global last_action
-    actions.append({"wait": time.time() - last_action})
+    # actions.append({"wait": time.time() - last_action})
     last_action = time.time()
 
 
