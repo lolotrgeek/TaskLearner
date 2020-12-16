@@ -21,7 +21,7 @@ with open('listfile.data', 'rb') as filehandle:
 step_cnt = 0
 ep_reward = 0
 done = False
-state = env.reset()
+state = env.reset(debug=True, noShow=False)
 
 while not done:
     if step_cnt >= len(actions):

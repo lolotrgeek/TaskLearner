@@ -165,9 +165,7 @@ class DesktopEnv(gym.Env):
 
     # "rgb_array" returns "numpy.ndarray"
 
-    def __init__(self, noShow=True, debug=False):
-        self.debug=debug
-        self.no_show=noShow
+    def __init__(self):
         self.camera = WebcamVideoStream(src=0).start()
         self.start_time = time.time()
         self.time_limit = 1000
@@ -198,17 +196,19 @@ class DesktopEnv(gym.Env):
                 
             elif isinstance(a, int):
                 # integers which represent key presses
-                if self.debug is True:
+                if self.debug is False:
+                    actions.main.key_stroke(keyMap[a])
+                else:
                     print(str(keyMap[a]))
                     pass
-                actions.main.key_stroke(keyMap[a])
                     
             elif isinstance(a, list):
                 # list which represent x,y coordinate with a buttonmask (clicks)
-                if self.debug is True:
+                if self.debug is False:
+                    actions.main.mouse_action(a)
+                else:
                     print(str(a[1]), ',', str(a[2]))
                     pass
-                actions.main.mouse_action(a)
                 
 
         if self.last_time - self.start_time > self.time_limit:
@@ -216,9 +216,12 @@ class DesktopEnv(gym.Env):
             done = True
         return self.state, step_reward, done, {}
 
-    def reset(self):
-        actions.main.key_release()
-        actions.main.mouse_action([0,0,0,0,0])
+    def reset(self, debug=False, noShow=False):
+        self.debug=debug
+        self.no_show=noShow
+        if self.debug is False:
+            actions.main.key_release()
+            actions.main.mouse_action([0,0,0,0,0])
         cv2.destroyAllWindows()
         if self.no_show is False:
             frame = self.camera.read()
@@ -234,16 +237,18 @@ class DesktopEnv(gym.Env):
         if self.state is None:
             print('Unable to render.')
             return None
-        try:
-            print("fps: {}".format(1 / (time.time() - self.last_time)))
-        except ZeroDivisionError:
-            pass
+        if self.debug is True:
+            try:
+                print("fps: {}".format(1 / (time.time() - self.last_time)))
+            except ZeroDivisionError:
+                pass
         if self.no_show is False:
             cv2.imshow("Frame", self.state)
             cv2.waitKey(1)
         return self.state
 
     def close(self):
-        actions.main.key_release()
+        if self.debug is False:
+            actions.main.key_release()
         self.camera.stop()
         cv2.destroyAllWindows()
