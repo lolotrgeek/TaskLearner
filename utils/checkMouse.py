@@ -1,3 +1,4 @@
+# Run on machine that is receiving HID events to log events received
 from pynput import mouse
 from pynput import keyboard
 actions = []
