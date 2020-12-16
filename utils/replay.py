@@ -33,31 +33,23 @@ def _wait_for_process_exit(target_process):
 
 def send_mouse_event(mouse_path, buttons, relative_x, relative_y,
                      vertical_wheel_delta, horizontal_wheel_delta):
-    """
-    https://wiki.osdev.org/Mouse_Input
-    """
-    # x, y = _scale_mouse_coordinates(relative_x, relative_y)
-    x, y = relative_x, relative_y
+    x, y = _scale_mouse_coordinates(relative_x, relative_y)
 
-    # buf = [0] * 7
-    # buf[0] = buttons # Middle = bit 2 (value=4), right = bit 1 (value=2), left = bit 0 (value=1).
-    # buf[1] = relative_x & 0xff # "delta X" value
-    # buf[2] = (x >> 8) & 0xff 
-    # buf[3] = relative_y & 0xff # "delta y" value
-    # buf[4] = (y >> 8) & 0xff
-    # buf[5] = vertical_wheel_delta & 0xff
-    # buf[6] = horizontal_wheel_delta & 0xff
-    buf = [0] * 3
+    buf = [0] * 7
     buf[0] = buttons # Middle = bit 2 (value=4), right = bit 1 (value=2), left = bit 0 (value=1).
-    buf[1] = x & 0xff # "delta X" value
-    buf[2] = y & 0xff # "delta y" value
+    buf[1] = relative_x & 0xff # "delta X" value
+    buf[2] = (x >> 8) & 0xff 
+    buf[3] = relative_y & 0xff # "delta y" value
+    buf[4] = (y >> 8) & 0xff
+    buf[5] = vertical_wheel_delta & 0xff
+    buf[6] = horizontal_wheel_delta & 0xff
+    # buf = [0] * 3
+    # buf[0] = buttons # Middle = bit 2 (value=4), right = bit 1 (value=2), left = bit 0 (value=1).
+    # buf[1] = x & 0xff # "delta X" value
+    # buf[2] = y & 0xff # "delta y" value
     # print(buf)
-    print(bytearray(buf))
+    # print(bytearray(buf))
     _write_to_hid_interface_immediately(mouse_path, buf)
-
-
-
-    #NOTE: Typical values for deltaX and deltaY are 1 or 2 for slow movement, and perhaps 20 for very fast movement. Maximum possible values are +255 to -256 (they are 9-bit quantities, two's complement).
 
 def _scale_mouse_coordinates(relative_x, relative_y):
     # This comes from LOGICAL_MAXIMUM in the mouse HID descriptor.
@@ -112,23 +104,24 @@ step_cnt = 0
 
 with open('listfile.data', 'rb') as filehandle:
     actions = pickle.load(filehandle)
-
+while True:
     print(step_cnt, len(actions))
-    while step_cnt <= len(actions):
-        for a in actions:
-            if isinstance(a, dict):
-                if "wait" in a:
-                    # TODO: move to next state but, wait x amount before taking next action...
-                    # time.sleep(a["wait"])
-                    print(a)
-            elif isinstance(a, int):
-                # integers which represent key presses
-                # actions.main.key_stroke(keyMap[a])
-                # print(str(keyMap[a]))
-                    print(a)
-            elif isinstance(a, list):
-                # objects which represent x,y coordinate with a buttonmask (clicks)
-                # TODO: decode/test actual mouse movements
-                send_mouse_event(mouse_path, a[0], a[1], a[2], a[3], a[4])
-                # print(a)
-        step_cnt += 1
+    if step_cnt >= len(actions):
+        break
+    for a in actions:
+        if isinstance(a, dict):
+            if "wait" in a:
+                # TODO: move to next state but, wait x amount before taking next action...
+                # time.sleep(a["wait"])
+                pass
+        elif isinstance(a, int):
+            # integers which represent key presses
+            # actions.main.key_stroke(keyMap[a])
+            # print(str(keyMap[a]))
+            pass
+        elif isinstance(a, list):
+            # objects which represent x,y coordinate with a buttonmask (clicks)
+            # TODO: decode/test actual mouse movements
+            send_mouse_event(mouse_path, a[0], a[1], a[2], a[3], a[4])
+            pass
+    step_cnt += 1
