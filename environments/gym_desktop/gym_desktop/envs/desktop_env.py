@@ -27,7 +27,12 @@ def keycode(key):
         raise error.Error(
             'Not sure how to translate to keycode: {!r}'.format(key))
 
-
+def relative_pos(pos, total):
+    """
+    pos - int : position of cursor
+    total - int : total width or height
+    """
+    return min(1.0, max(0.0, pos / total))
 
 class ActionSpace(gym.Space):
     """The space of Desktop actions.
@@ -117,6 +122,8 @@ class ActionSpace(gym.Space):
         else:
             x = self.np_random.randint(self.screen_shape[0])
             y = self.np_random.randint(self.screen_shape[1])
+            relative_x = relative_pos(x, self.screen_shape[0])
+            relative_y = relative_pos(y, self.screen_shape[1])            
             buttonmask = self.np_random.choice(self.buttonmasks)
             event = [[buttonmask,x,y,0,0]]
             # event = []
@@ -275,5 +282,6 @@ class DesktopEnv(gym.Env):
     def close(self):
         if self.debug is False:
             actions.main.key_release()
+            actions.main.mouse_action([0,0,0,0,0])
         self.camera.stop()
         cv2.destroyAllWindows()
