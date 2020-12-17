@@ -113,7 +113,7 @@ class ActionSpace(gym.Space):
         if event_type == 0:
             # Let's press a key
             key = self.np_random.choice(self.keys)
-            event = [key]
+            event = [key.item()]
         else:
             x = self.np_random.randint(self.screen_shape[0])
             y = self.np_random.randint(self.screen_shape[1])
@@ -194,7 +194,11 @@ class DesktopEnv(gym.Env):
             if isinstance(a, dict):
                 # TODO: move to next state but, wait x amount before taking next action...
                 # time.sleep(a["wait"])
-                return self.state, step_reward, done, {}
+                if self.debug is False:
+                    pass
+                else:
+                    print('WaitEvent:' ,str(a))
+                    pass
                 
             elif isinstance(a, int):
                 # integers which represent key presses
@@ -213,6 +217,7 @@ class DesktopEnv(gym.Env):
                     pass
 
         self.step_count+= 1
+        print(self.step_count)
         if self.step_count >= self.step_limit:
             print("Ending, step limit reached: ", self.step_count)
             done = True
