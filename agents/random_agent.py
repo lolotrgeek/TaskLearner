@@ -25,16 +25,17 @@ if __name__ == '__main__':
     outdir = '/tmp/random-agent-results'
     env = Monitor(env, directory=outdir, force=True)
     agent = RandomAgent(env.action_space)
-    episode_count = 100
+    episodes = 10
     reward = 0
     done = False
    
-    for episode in range(episode_count):
-        state = env.reset(debug=False, noShow=False)
-        if episode >= episode_count:
+    for episode in range(episodes):
+        state = env.reset(debug=True, noShow=False)
+        print(episode)
+        if episode >= episodes:
             done = True
         while True:
-            if done:
+            if done is True:
                 break
             action = agent.act(state, reward, done)
             next_state, reward, done, _ = env.step(action)
