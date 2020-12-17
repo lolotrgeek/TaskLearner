@@ -26,13 +26,11 @@ if __name__ == '__main__':
     env = Monitor(env, directory=outdir, force=True)
     agent = RandomAgent(env.action_space)
     episodes = 10
-    reward = 0
-    done = False
    
     for episode in range(episodes):
-        state = env.reset(debug=False, noShow=False)
-        if episode >= episodes:
-            done = True
+        state = env.reset(steplimit=100, debug=True, noShow=False)
+        reward = 0
+        done = False
         print('episode:' , episode)
         while True:
             if done is True:
