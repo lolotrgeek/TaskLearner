@@ -65,11 +65,12 @@ class ActionSpace(gym.Space):
         self.screen_shape = screen_shape
         if self.screen_shape is not None:
             self.buttonmasks = buttonmasks
-            if buttonmasks is None:
-                buttonmasks = range(256)
-            for buttonmask in buttonmasks:
-                self.buttonmasks.append(buttonmask)
-            self._buttonmask_set = set(self.buttonmasks)
+            # self.buttonmasks = []
+            # if buttonmasks is None:
+            #     buttonmasks = range(256)
+            # for buttonmask in buttonmasks:
+            #     self.buttonmasks.append(buttonmask)
+            # self._buttonmask_set = set(self.buttonmasks)
 
     def contains(self, action):
         if not isinstance(action, list):
@@ -93,7 +94,7 @@ class ActionSpace(gym.Space):
                     return False
                 elif a[2] < 0 or a[2] > self.screen_shape[1]:
                     return False
-                elif a[0] not in self._buttonmask_set:
+                elif a[0] not in self.buttonmasks:
                     return False
                 # TODO scrollwheel?
             elif isinstance(a, dict):
@@ -112,7 +113,7 @@ class ActionSpace(gym.Space):
         if event_type == 0:
             # Let's press a key
             key = self.np_random.choice(self.keys)
-            event = key
+            event = [key]
         else:
             x = self.np_random.randint(self.screen_shape[0])
             y = self.np_random.randint(self.screen_shape[1])
@@ -201,7 +202,7 @@ class DesktopEnv(gym.Env):
                 if self.debug is False:
                     actions.main.key_stroke(keyMap[a])
                 else:
-                    print(str(keyMap[a]))
+                    print('KeyEvent:' ,str(keyMap[a]))
                     pass
                     
             elif isinstance(a, list):
@@ -209,7 +210,7 @@ class DesktopEnv(gym.Env):
                 if self.debug is False:
                     actions.main.mouse_action(a)
                 else:
-                    print(str(a[1]), ',', str(a[2]))
+                    print('MouseEvent: ', str(a[1]), ',', str(a[2]))
                     pass
                 
 
@@ -221,6 +222,7 @@ class DesktopEnv(gym.Env):
     def reset(self, debug=False, noShow=False):
         self.debug=debug
         self.no_show=noShow
+        self.last_time = time.time()
         if self.debug is False:
             actions.main.key_release()
             actions.main.mouse_action([0,0,0,0,0])

@@ -30,10 +30,10 @@ if __name__ == '__main__':
     done = False
    
     for episode in range(episodes):
-        state = env.reset(debug=True, noShow=False)
-        print(episode)
+        state = env.reset(debug=False, noShow=False)
         if episode >= episodes:
             done = True
+        print('episode:' , episode)
         while True:
             if done is True:
                 break
