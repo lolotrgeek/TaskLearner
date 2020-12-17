@@ -50,6 +50,7 @@ class ActionSpace(gym.Space):
 
     """
     def __init__(self, keys=None, buttonmasks=None, screen_shape=(STATE_W, STATE_H)):
+        print(self._np_random)
         # TODO : document & consider removing extra mapping?
         self.keys = []
         if keys is None:
