@@ -64,7 +64,7 @@ class ActionSpace(gym.Space):
 
         self.screen_shape = screen_shape
         if self.screen_shape is not None:
-            self.buttonmasks = []
+            self.buttonmasks = buttonmasks
             if buttonmasks is None:
                 buttonmasks = range(256)
             for buttonmask in buttonmasks:
@@ -95,6 +95,7 @@ class ActionSpace(gym.Space):
                     return False
                 elif a[0] not in self._buttonmask_set:
                     return False
+                # TODO scrollwheel?
             elif isinstance(a, dict):
                 # WaitEvent
                 if a['wait'] < self._wait:
@@ -111,12 +112,11 @@ class ActionSpace(gym.Space):
         if event_type == 0:
             # Let's press a key
             key = self.np_random.choice(self.keys)
-            event = [key]
+            event = key
         else:
             x = self.np_random.randint(self.screen_shape[0])
             y = self.np_random.randint(self.screen_shape[1])
             buttonmask = self.np_random.choice(self.buttonmasks)
-            # event = [PointerEvent(x, y, buttonmask)]
             event = [[buttonmask,x,y,0,0]]
             # event = []
         return event
