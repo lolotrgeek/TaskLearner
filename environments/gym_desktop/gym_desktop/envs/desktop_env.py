@@ -169,8 +169,6 @@ class DesktopEnv(gym.Env):
 
     def __init__(self):
         self.camera = WebcamVideoStream(src=0).start()
-        self.start_time = time.time()
-        self.time_limit = 1000
         self.action_space = ActionSpace(buttonmasks=[0,1,2,4]) # [none, left, right, middle]
         self.observation_space = spaces.Box(
             low=0, high=255, shape=(STATE_H, STATE_W, 3), dtype=np.uint8
@@ -189,6 +187,7 @@ class DesktopEnv(gym.Env):
 
         done = False
         step_reward = 1
+    
         # Actions:
         for a in action:
             # print(str(a))
@@ -212,17 +211,34 @@ class DesktopEnv(gym.Env):
                 else:
                     print('MouseEvent: ', str(a[1]), ',', str(a[2]))
                     pass
-                
 
-        if self.last_time - self.start_time > self.time_limit:
-            print("Ending...")
+        self.step_count+= 1
+        if self.step_count >= self.step_limit:
+            print("Ending, step limit reached: ", self.step_count)
+            done = True
+
+        runtime = self.last_time - self.start_time
+        if runtime > self.time_limit:
+            print("Ending, time limit reached: ", runtime)
             done = True
         return self.state, step_reward, done, {}
 
-    def reset(self, debug=False, noShow=False):
+    def reset(self, timelimit=1000, steplimit=100, debug=False, noShow=False):
+        """
+        timelimit - int: seconds
+
+        steplimit - int: number of steps
+        """
         self.debug=debug
         self.no_show=noShow
-        self.last_time = time.time()
+
+        self.step_count=0
+        self.step_limit = steplimit
+
+        self.time_limit = timelimit
+        self.start_time = time.time()
+        self.last_time = self.start_time
+
         if self.debug is False:
             actions.main.key_release()
             actions.main.mouse_action([0,0,0,0,0])
