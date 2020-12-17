@@ -5,6 +5,8 @@ import gym_desktop
 from pyinstrument import Profiler
 
 # sample and perform random actions
+# source: 
+# https://github.com/openai/gym/blob/master/examples/agents/random_agent.py
 
 profiler = Profiler()
 profiler.start()
