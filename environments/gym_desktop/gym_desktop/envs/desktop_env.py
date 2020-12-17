@@ -70,6 +70,12 @@ class ActionSpace(gym.Space):
         self.screen_shape = screen_shape
         if self.screen_shape is not None:
             self.buttonmasks = buttonmasks
+            # TODO: set movement sampling/action restrictions:  
+            # 1. Typical values for deltaX and deltaY are 1 or 2 for slow movement, and perhaps 20 for very fast movement. 
+            # 2. Maximum possible values are +255 to -256 (they are 9-bit quantities, two's complement).
+            # ref: https://wiki.osdev.org/Mouse_Input
+            # or do we let agent learn this restriction since because we reward human behaviors and this is "inhuman" 
+            
             # self.buttonmasks = []
             # if buttonmasks is None:
             #     buttonmasks = range(256)
@@ -101,7 +107,7 @@ class ActionSpace(gym.Space):
                     return False
                 elif a[0] not in self.buttonmasks:
                     return False
-                # TODO scrollwheel?
+                # TODO scrollwheel checks
             elif isinstance(a, dict):
                 # WaitEvent
                 if a['wait'] < self._wait:
@@ -120,13 +126,14 @@ class ActionSpace(gym.Space):
             key = self.np_random.choice(self.keys)
             event = [key.item()]
         else:
+            # Let's move the mouse
             x = self.np_random.randint(self.screen_shape[0])
             y = self.np_random.randint(self.screen_shape[1])
             relative_x = relative_pos(x, self.screen_shape[0])
             relative_y = relative_pos(y, self.screen_shape[1])            
             buttonmask = self.np_random.choice(self.buttonmasks)
+            # TODO scrollwheel sampling
             event = [[buttonmask,relative_x,relative_y,0,0]]
-            # event = []
         return event
 
 
