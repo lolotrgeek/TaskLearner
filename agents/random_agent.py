@@ -28,7 +28,7 @@ if __name__ == '__main__':
     episodes = 10
    
     for episode in range(episodes):
-        state = env.reset(steplimit=100, debug=True, noShow=False)
+        state = env.reset(steplimit=100, debug=False, noShow=False)
         reward = 0
         done = False
         print('episode:' , episode)
