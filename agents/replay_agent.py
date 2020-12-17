@@ -4,8 +4,9 @@ from gym.wrappers import Monitor
 import gym_desktop
 import time
 import pickle
-
 from pyinstrument import Profiler
+
+# loads a record of actions (from utils/replay.py) and runs perfroms them in the environment
 
 profiler = Profiler()
 profiler.start()
@@ -21,7 +22,7 @@ with open('listfile.data', 'rb') as filehandle:
 step_cnt = 0
 ep_reward = 0
 done = False
-state = env.reset(debug=False, noShow=False)
+state = env.reset(debug=True, noShow=False)
 
 while not done:
     if step_cnt >= len(actions):
