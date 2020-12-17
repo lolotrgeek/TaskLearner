@@ -52,7 +52,6 @@ def on_press(key):
 
 def on_move(x, y):
     action()
-    # actions.append({"x":x, "y":y, "buttonmask":0, "v_wheel":0, "h_wheel":0})
     relative_x = relative_pos(x, screen.width)
     relative_y = relative_pos(y, screen.height)
     actions.append([0, relative_x, relative_y, 0, 0])
@@ -65,7 +64,6 @@ def on_click(x, y, button, pressed):
     btn_name = str(button).startswith('Button.')
     if btn_name is True:
         btn = str(str(button).split('.')[1])
-        # actions.append({"x":x, "y":y, "buttonmask":mousemap[btn], "v_wheel":0, "h_wheel":0})
         relative_x = relative_pos(x, screen.width)
         relative_y = relative_pos(y, screen.height)
         actions.append([mousemap[btn], relative_x, relative_y,  0, 0])
@@ -77,7 +75,6 @@ def on_click(x, y, button, pressed):
 
 def on_scroll(x, y, dx, dy):
     action()
-    # actions.append({"x":x, "y":y, "buttonmask":0, "v_wheel":dy, "h_wheel":dx})
     relative_x = relative_pos(x, screen.width)
     relative_y = relative_pos(y, screen.height)
     actions.append([0, relative_x, relative_y, dy, dx])

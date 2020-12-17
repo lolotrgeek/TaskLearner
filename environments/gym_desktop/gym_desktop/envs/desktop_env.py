@@ -180,6 +180,7 @@ class DesktopEnv(gym.Env):
         self.last_time = time.time()
         if self.no_show is False:
             frame = self.camera.read()
+            # self.state = imutils.resize(frame, width=STATE_W)
             self.state = frame
         else:
             self.state=np.array({})    
