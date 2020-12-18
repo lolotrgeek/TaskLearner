@@ -22,13 +22,7 @@ keyMap = actions.keymaps.machineKeyMap.keys
 no_key=0
 no_mouse=[0,0,0,0]
 
-def keycode(key):
-    if key in keyMap:
-        return keyMap[key]
-    else:
-        raise error.Error(
-            'Not sure how to translate to keycode: {!r}'.format(key))
-
+# TODO: move into action space
 def relative_pos(pos, total):
     """
     pos - int : position of cursor
