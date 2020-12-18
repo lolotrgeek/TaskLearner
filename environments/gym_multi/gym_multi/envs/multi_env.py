@@ -72,7 +72,6 @@ class MultiEnv(gym.Env):
 
     def __init_full_obs(self):
         self._full_obs = {}
-        # set starting state of each agent
         for agent_i in range(self.n_agents):
             print('setting state for agent', agent_i)
             while True:
@@ -119,7 +118,7 @@ class MultiEnv(gym.Env):
 
     def __update_agent_view(self, agent_i):
         print("agent ", agent_i, " observation: ", self.agent_pos[agent_i])
-        # add to full_observation
+        # TODO: add agents observation to full_observation?
         # self._full_obs[self.agent_pos[agent_i]] = [np.array({})]
 
     def step(self, agents_action):
