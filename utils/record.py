@@ -54,7 +54,7 @@ def on_move(x, y):
     action()
     relative_x = relative_pos(x, screen.width)
     relative_y = relative_pos(y, screen.height)
-    actions.append([0, relative_x, relative_y, 0, 0])
+    actions.append([0, relative_x, relative_y, 0])
     print('Pointer moved to {0}'.format(
         (x, y)))
 
@@ -66,7 +66,7 @@ def on_click(x, y, button, pressed):
         btn = str(str(button).split('.')[1])
         relative_x = relative_pos(x, screen.width)
         relative_y = relative_pos(y, screen.height)
-        actions.append([mousemap[btn], relative_x, relative_y,  0, 0])
+        actions.append([mousemap[btn], relative_x, relative_y,  0])
 
     print('{0} at {1}'.format(
         'Pressed', button if pressed else 'Released', button,
@@ -77,8 +77,8 @@ def on_scroll(x, y, dx, dy):
     action()
     relative_x = relative_pos(x, screen.width)
     relative_y = relative_pos(y, screen.height)
-    actions.append([0, relative_x, relative_y, dy, dx])
-    print('Scrolled {0}.'.format('down' if dy < 0 else 'up'), dx, dy)
+    actions.append([0, relative_x, relative_y, dy])
+    print('Scrolled {0}.'.format('down' if dy < 0 else 'up'))
 
 
 keyListener = keyboard.Listener(on_press=on_press)

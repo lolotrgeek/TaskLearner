@@ -121,7 +121,6 @@ while True:
             pass
         elif isinstance(a, list):
             # objects which represent x,y coordinate with a buttonmask (clicks)
-            # TODO: decode/test actual mouse movements
-            send_mouse_event(mouse_path, a[0], a[1], a[2], a[3], a[4])
+            send_mouse_event(mouse_path, a[0], a[1], a[2], a[3], 0)
             pass
     step_cnt += 1

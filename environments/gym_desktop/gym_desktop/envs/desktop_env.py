@@ -19,6 +19,8 @@ STATE_H = 1080
 
 # Action Constants
 keyMap = actions.keymaps.machineKeyMap.keys
+no_key=0
+no_mouse=[0,0,0,0]
 
 def keycode(key):
     if key in keyMap:
@@ -70,11 +72,14 @@ class ActionSpace(gym.Space):
         self.screen_shape = screen_shape
         if self.screen_shape is not None:
             self.buttonmasks = buttonmasks
-            # TODO: set movement sampling/action restrictions:  
+            # NOTE: movement sampling/action:  
             # 1. Typical values for deltaX and deltaY are 1 or 2 for slow movement, and perhaps 20 for very fast movement. 
             # 2. Maximum possible values are +255 to -256 (they are 9-bit quantities, two's complement).
             # ref: https://wiki.osdev.org/Mouse_Input
-            # or do we let agent learn this restriction since because we reward human behaviors and this is "inhuman" 
+            # CONCLUSION:
+            # these rules should emerge from a learning agent if "human like" behavior is rewarded
+            # no need to hard-code right now
+         
             
             # self.buttonmasks = []
             # if buttonmasks is None:
@@ -82,6 +87,7 @@ class ActionSpace(gym.Space):
             # for buttonmask in buttonmasks:
             #     self.buttonmasks.append(buttonmask)
             # self._buttonmask_set = set(self.buttonmasks)
+        self.scroll_set = [ -1, 0, 1] # [down, none, up]
 
     def contains(self, action):
         if not isinstance(action, list):
@@ -94,11 +100,10 @@ class ActionSpace(gym.Space):
                     return False
             elif isinstance(a, list):
                 # PointerEvent
-                # a[0] - int, buttonmask 
-                # a[1] - int, x  
-                # a[2] - int, y
-                # a[3] - int, v_wheel
-                # a[4] - int, h_wheel
+                # a[0] - int, buttonmask [1,2,4] 
+                # a[1] - int, x [0 - state_h] 
+                # a[2] - int, y [0 - state_w]
+                # a[3] - int, wheel [-1, 0, 1]
                 if self.screen_shape is None:
                     return False
                 if a[1] < 0 or a[1] > self.screen_shape[0]:
@@ -107,7 +112,8 @@ class ActionSpace(gym.Space):
                     return False
                 elif a[0] not in self.buttonmasks:
                     return False
-                # TODO scrollwheel checks
+                elif a[3] not in self.scroll_set:
+                    return False
             elif isinstance(a, dict):
                 # WaitEvent
                 if a['wait'] < self._wait:
@@ -126,14 +132,14 @@ class ActionSpace(gym.Space):
             key = self.np_random.choice(self.keys)
             event = [key.item()]
         else:
-            # Let's move the mouse
+            # Let's move/click/scroll the mouse
             x = self.np_random.randint(self.screen_shape[0])
             y = self.np_random.randint(self.screen_shape[1])
             relative_x = relative_pos(x, self.screen_shape[0])
             relative_y = relative_pos(y, self.screen_shape[1])            
             buttonmask = self.np_random.choice(self.buttonmasks)
-            # TODO scrollwheel sampling
-            event = [[buttonmask,relative_x,relative_y,0,0]]
+            scroll = self.np_random.randint(self.scroll_set)
+            event = [[buttonmask,relative_x,relative_y,scroll]]
         return event
 
 
@@ -260,7 +266,7 @@ class DesktopEnv(gym.Env):
 
         if self.debug is False:
             actions.main.key_release()
-            actions.main.mouse_action([0,0,0,0,0])
+            actions.main.mouse_action(no_mouse)
         cv2.destroyAllWindows()
         if self.no_show is False:
             frame = self.camera.read()
@@ -289,6 +295,6 @@ class DesktopEnv(gym.Env):
     def close(self):
         if self.debug is False:
             actions.main.key_release()
-            actions.main.mouse_action([0,0,0,0,0])
+            actions.main.mouse_action(no_mouse)
         self.camera.stop()
         cv2.destroyAllWindows()

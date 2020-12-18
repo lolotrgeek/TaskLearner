@@ -7,12 +7,11 @@ class KeyEvent():
 
 
 class PointerEvent():
-    def __init__(self, x=0, y=0, buttonmask=0, v_wheel=0, h_wheel=0):
+    def __init__(self, x=0, y=0, buttonmask=0, wheel=0):
         self.x = x
         self.y = y
         self.buttonmask = buttonmask
-        self.v_wheel = v_wheel
-        self.h_wheel = h_wheel
+        self.wheel = wheel
 
 
 class SpecialEvent():
