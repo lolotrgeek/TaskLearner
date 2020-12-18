@@ -138,7 +138,7 @@ class ActionSpace(gym.Space):
             relative_x = relative_pos(x, self.screen_shape[0])
             relative_y = relative_pos(y, self.screen_shape[1])            
             buttonmask = self.np_random.choice(self.buttonmasks)
-            scroll = self.np_random.randint(self.scroll_set)
+            scroll = self.np_random.choice(self.scroll_set)
             event = [[buttonmask,relative_x,relative_y,scroll]]
         return event
 
