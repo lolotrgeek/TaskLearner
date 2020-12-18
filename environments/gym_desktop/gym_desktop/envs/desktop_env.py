@@ -293,8 +293,5 @@ class DesktopEnv(gym.Env):
         return self.state
 
     def close(self):
-        if self.debug is False:
-            actions.main.key_release()
-            actions.main.mouse_action(no_mouse)
         self.camera.stop()
         cv2.destroyAllWindows()
