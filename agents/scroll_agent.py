@@ -19,7 +19,7 @@ class RandomAgent(object):
         self.action_space = action_space
 
     def act(self, observation, reward, done):
-        return [[0,0,0,randint(-1, 1)]]
+        return [[500,500,0,randint(-1, 1)]]
 
 if __name__ == '__main__':
     # Run Environment
