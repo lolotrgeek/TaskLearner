@@ -12,6 +12,15 @@ from random import randint
 profiler = Profiler()
 profiler.start()
 
+def relative_pos(pos, total):
+    """
+    pos - int : position of cursor
+    total - int : total width or height
+    """
+    return min(1.0, max(0.0, pos / total))
+
+relative_x = relative_pos(500, 1920)
+relative_y = relative_pos(500, 1080) 
 
 class RandomAgent(object):
     """The world's scrolliest agent!"""
@@ -19,7 +28,7 @@ class RandomAgent(object):
         self.action_space = action_space
 
     def act(self, observation, reward, done):
-        return [[500,500,0,randint(-1, 1)]]
+        return [[0,relative_x,relative_y,randint(-1, 1)]]
 
 if __name__ == '__main__':
     # Run Environment
