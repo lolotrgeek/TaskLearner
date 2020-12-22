@@ -52,7 +52,7 @@ def mouse_action(mouse_event):
     '''
     try:
         fake_mouse.send_mouse_event(
-            mouse_path, mouse_event[0], mouse_event[1], mouse_event[2], mouse_event[3], mouse_event[4])
+            mouse_path, mouse_event[0], mouse_event[1], mouse_event[2], mouse_event[3], 0)
     except hid_write.WriteError as e:
         logger.error('Failed to forward mouse event: %s', e)
         return {'success': False}
