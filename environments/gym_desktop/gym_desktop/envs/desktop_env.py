@@ -10,6 +10,7 @@ import gym_desktop.envs.actions as actions
 from gym_desktop.envs.events import KeyEvent, PointerEvent, WaitEvent
 import imutils
 from imutils.video import WebcamVideoStream
+from random import randint
 
 faulthandler.enable()
 
@@ -200,8 +201,9 @@ class DesktopEnv(gym.Env):
             self.state=np.array({})    
 
         done = False
-        step_reward = 1
-    
+        # Rewards
+        step_reward = randint(-10, 10)
+
         # Actions:
         for a in action:
             # print(str(a))
