@@ -21,7 +21,6 @@ STATE_H = 1080
 # Action Constants
 keyMap = actions.keymaps.machineKeyMap.keys
 no_key=0
-no_mouse=[0,0,0,0]
 
 # TODO: move into action space
 def relative_pos(pos, total):
@@ -262,7 +261,7 @@ class DesktopEnv(gym.Env):
 
         if self.debug is False:
             actions.main.key_release()
-            actions.main.mouse_action(no_mouse)
+            actions.main.mouse_action([0,0,0,0])
         cv2.destroyAllWindows()
         if self.no_show is False:
             frame = self.camera.read()
