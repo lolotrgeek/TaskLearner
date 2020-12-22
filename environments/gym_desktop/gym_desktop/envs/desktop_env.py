@@ -21,7 +21,7 @@ STATE_H = 1080
 # Action Constants
 keyMap = actions.keymaps.machineKeyMap.keys
 no_key=0
-no_mouse=[0,0,0,0]
+no_mouse=[0,0,0,0,0]
 
 # TODO: move into action space
 def relative_pos(pos, total):

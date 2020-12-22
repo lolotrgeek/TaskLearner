@@ -56,4 +56,6 @@ For action debugging create a record using `utils/record.py` and run `agents/rep
 
 ## Todo
 - ship with conda env
-- put gym_desktop into separate repo
+- put environments into separate repos
+- refactor code
+- rewards
