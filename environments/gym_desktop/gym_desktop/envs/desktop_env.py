@@ -209,8 +209,8 @@ class DesktopEnv(gym.Env):
         done = False
         # Rewards
         action_reward = 1
-        # distance in total pixels from goal state, 0 means state = goal
-        goal_reward = np.sum( goal - self.state) * -1
+        # distance (weighted pixels) from goal state, if 0 state equals goal
+        goal_reward = (np.sum(goal) - np.sum(self.state)) * -1
         step_reward = action_reward + goal_reward
 
         # Actions:
