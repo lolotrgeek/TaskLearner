@@ -242,7 +242,6 @@ class DesktopEnv(gym.Env):
                     pass
 
         self.step_count+= 1
-        print(self.step_count)
         if self.step_count >= self.step_limit:
             print("Ending, step limit reached: ", self.step_count)
             done = True

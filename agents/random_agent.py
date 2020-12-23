@@ -31,7 +31,7 @@ if __name__ == '__main__':
         state = env.reset(steplimit=100, debug=False, noShow=False)
         reward = 0
         done = False
-        print('episode:' , episode, 'reward:', reward)
+        print('episode:' , episode)
         while True:
             if done is True:
                 break
@@ -39,7 +39,7 @@ if __name__ == '__main__':
             next_state, reward, done, _ = env.step(action)
             env.render()
             state = next_state
-
+        print('reward:', reward)
     # Stop Environment
     env.close()
     profiler.stop()
