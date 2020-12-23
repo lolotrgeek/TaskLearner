@@ -31,7 +31,7 @@ if __name__ == '__main__':
         state = env.reset(steplimit=100, debug=False, noShow=False)
         reward = 0
         done = False
-        print('episode:' , episode)
+        print('episode:' , episode, 'reward:', reward)
         while True:
             if done is True:
                 break
