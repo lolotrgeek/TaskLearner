@@ -11,6 +11,7 @@ from gym_desktop.envs.events import KeyEvent, PointerEvent, WaitEvent
 import imutils
 from imutils.video import WebcamVideoStream
 from random import randint
+import pickle
 
 faulthandler.enable()
 
@@ -22,6 +23,11 @@ STATE_H = 1080
 keyMap = actions.keymaps.machineKeyMap.keys
 no_key=0
 no_mouse=[0,0,0,0]
+
+# Goal
+goal = np.array({})
+with open('goal.state', 'rb') as filehandle:
+    goal = pickle.load(filehandle)
 
 # TODO: move into action space
 def relative_pos(pos, total):
@@ -202,7 +208,10 @@ class DesktopEnv(gym.Env):
 
         done = False
         # Rewards
-        step_reward = randint(-10, 10)
+        action_reward = 1
+        # distance in total pixels from goal state, 0 means state = goal
+        goal_reward = np.sum( goal - self.state) * -1
+        step_reward = action_reward + goal_reward
 
         # Actions:
         for a in action:
