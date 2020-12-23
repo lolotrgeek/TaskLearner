@@ -4,9 +4,17 @@ import pickle
 import cv2
 import numpy as np
 
-# TODO NEXT move this into env and get current state distance from goal, then use as a reward signal 
+goal = None
+compare = None
+same = None
 with open('goal.state', 'rb') as filehandle:
     goal = pickle.load(filehandle)
-    cv2.imshow("Goal", goal)
-    cv2.waitKey(0)
-    print(np.sum(goal))
+    same = goal
+
+with open('compare.state', 'rb') as filehandle:
+    compare = pickle.load(filehandle)
+
+print((np.sum(goal) - np.sum(same)) * -1) # result -> 0
+print((np.sum(goal) - np.sum(compare)) * -1) # result -> -7509911
+cv2.imshow("Goal", goal)
+cv2.waitKey(0)
