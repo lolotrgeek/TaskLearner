@@ -43,7 +43,7 @@ class DesktopEnv(gym.Env):
       Size of window
 
     Actions:
-      Type: Discrete(1156)
+      Type: Discrete(1139) or [0-1138]
       Mouse movements, button presses and Keystrikes.
 
     Rewards:
@@ -72,7 +72,7 @@ class DesktopEnv(gym.Env):
 
     def __init__(self):
         self.camera = WebcamVideoStream(src=0).start()
-        self.action_space = spaces.Discrete(1156)
+        self.action_space = spaces.Discrete(1139)
         self.observation_space = spaces.Box(
             low=0, high=255, shape=(STATE_H, STATE_W, 3), dtype=np.uint8
         )

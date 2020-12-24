@@ -14,7 +14,7 @@ def on_press(key):
         key = key.char
 
     print(key)
-    if key == "esc":
+    if key == "?":
         done = True
         print('Done:', str(done))
         return False
