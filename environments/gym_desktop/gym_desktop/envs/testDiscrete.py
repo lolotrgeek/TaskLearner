@@ -1,17 +1,17 @@
-from gym_desktop.envs.actions import actionMap
+import gym_desktop.envs.actions as actions
 from time import sleep
 
 sent = []
-actions = actionMap.actions
+action_space = actions.actionMap.actions
 
-for action in actions:
+for action in action_space:
     print(str(action))
-    if isinstance(actions[action], list):
+    if isinstance(action_space[action], list):
         # integers which represent key presses
-        actions.main.key_stroke(actions[action])
+        actions.main.key_stroke(action_space[action])
         sent.append([action, 'key'])
 
-    elif isinstance(actions[action], int):
+    elif isinstance(action_space[action], int):
         # list which represent x,y coordinate with a buttonmask (clicks)
         if action < 513:
             actions.main.mouse_action([0, action, 0, 0])  # delta_x

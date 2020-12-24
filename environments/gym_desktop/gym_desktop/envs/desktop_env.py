@@ -6,7 +6,7 @@ import cv2
 import mss
 import numpy as np
 import faulthandler
-from gym_desktop.envs.actions import actionMap
+import gym_desktop.envs.actions as actions
 import imutils
 from imutils.video import WebcamVideoStream
 from random import randint
@@ -19,7 +19,7 @@ STATE_W = 1920
 STATE_H = 1080
 
 # Action Constants
-actions = actionMap.actions
+action_space = actions.actionMap.actions
 no_key=0
 no_mouse=[0,0,0,0]
 
@@ -98,15 +98,15 @@ class DesktopEnv(gym.Env):
         # Actions:
         
         print(str(action))
-        if isinstance(actions[action], list):
+        if isinstance(actions.actions_space[action], list):
             # integers which represent key presses
             if self.debug is False:
-                actions.main.key_stroke(actions[action])
+                actions.main.key_stroke(actions.actions_space[action])
             else:
-                print('KeyEvent:' ,str(actions[action]))
+                print('KeyEvent:' ,str(actions.actions_space[action]))
                 pass
                 
-        elif isinstance(actions[action], int):
+        elif isinstance(action_space[action], int):
             # list which represent x,y coordinate with a buttonmask (clicks)
             if self.debug is False:
                 if action < 513:

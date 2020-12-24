@@ -4,6 +4,7 @@ from pynput import keyboard
 actions = []
 done = False
 
+
 def on_press(key):
     global done
     modifier = str(key).startswith('Key.')
@@ -18,19 +19,17 @@ def on_press(key):
         print('Done:', str(done))
         return False
 
+
 def on_move(x, y):
     global done
     actions.append([0, x, y, 0])
-    print('Pointer moved to {0}'.format(
-        (x, y)))
+    print('Pointer {0}'.format((x, y)))
 
 
 def on_click(x, y, button, pressed):
     global done
     actions.append([button, x, y, 0])
-    print('{0} at {1}'.format(
-        'Pressed' if pressed else 'Released',
-        (x, y)))
+    print('{0} at {1}'.format('Pressed', (x, y)))
 
 
 def on_scroll(x, y, dx, dy):
