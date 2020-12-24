@@ -16,7 +16,7 @@ for action in action_space:
         if action < 513:
             actions.main.mouse_action([0, action, 0, 0])  # delta_x
             sent.append([action, 'deltax'])
-        elif action > 513 and action < 1025:
+        elif action > 512 and action < 1025:
             actions.main.mouse_action([0, 0, action, 0])  # delta_y
             sent.append([action, 'deltay'])
         elif action == 1025:

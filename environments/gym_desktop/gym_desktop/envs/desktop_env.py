@@ -111,7 +111,7 @@ class DesktopEnv(gym.Env):
             if self.debug is False:
                 if action < 513:
                     actions.main.mouse_action([0, action, 0, 0]) # delta_x
-                elif action > 513 and action < 1025:
+                elif action > 512 and action < 1025:
                     actions.main.mouse_action([0, 0, action, 0]) # delta_y
                 elif action == 1025:
                     actions.main.mouse_action([action_space[action], 0, 0, 0]) # btn_1
