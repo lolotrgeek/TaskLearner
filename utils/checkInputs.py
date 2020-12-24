@@ -12,6 +12,7 @@ def on_press(key):
         key = str(str(key).split('.')[1])
     else:
         key = key.char
+        actions.append(key)
 
     print(key)
     if key == "?":
