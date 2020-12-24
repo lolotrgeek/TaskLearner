@@ -33,8 +33,8 @@ class DesktopEnv(gym.Env):
     """
     Description:
       A Desktop GUI is rendered and the agent is given a task to complete. The agent submits states
-      it believes to solve the task to a validation function. The validation function returns a boolean,
-      true when the task is complete.
+      it believes to solve the task to a validation function. The validation function returns the distance
+      the submitted state is from the goal state. This distance be expressed as a reward.
     
     Source:
 
@@ -43,15 +43,13 @@ class DesktopEnv(gym.Env):
       Size of window
 
     Actions:
-      Type: Discrete(126)
-      String   Action
-      0x01     hex keycode
-      ...
+      Type: Discrete(1156)
+      Mouse movements, button presses and Keystrikes.
 
     Rewards:
-      action  .01
+      action  1
       statechange  delta(currentstate, laststate) ...with decay?
-      failure = -.01
+      distance from state
       [energyuse]
 
 
@@ -61,12 +59,11 @@ class DesktopEnv(gym.Env):
       release all keys
 
     Episode Termination:
-      reward = -100
-      Episode length is greater than 200 seconds.
-
+        time limit - 1000 seconds 
+        step limit - 100 steps
 
     Solved Requirements:
-      Considered solved when the given state returns true when passes to the validation function.
+      Considered solved when the given state returns 0 (goal = state) when passes to the validation function.
     """
 
     metadata = {'render.modes': ['human', "rgb_array", "state_pixels"]}
@@ -75,7 +72,7 @@ class DesktopEnv(gym.Env):
 
     def __init__(self):
         self.camera = WebcamVideoStream(src=0).start()
-        self.action_space = spaces.Discrete([1156])
+        self.action_space = spaces.Discrete(1156)
         self.observation_space = spaces.Box(
             low=0, high=255, shape=(STATE_H, STATE_W, 3), dtype=np.uint8
         )
