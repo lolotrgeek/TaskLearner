@@ -43,8 +43,6 @@ for action in action_space:
     else:
         print('NullEvent')
 
-    sleep(.5)
-
 with open('actionsSent.txt', 'w') as filehandle:
     for action in actions:
         if isinstance(action, list):
