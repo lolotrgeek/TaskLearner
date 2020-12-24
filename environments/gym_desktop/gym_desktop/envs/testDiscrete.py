@@ -20,25 +20,25 @@ for action in action_space:
             actions.main.mouse_action([0, 0, action, 0])  # delta_y
             sent.append([action, 'deltay'])
         elif action == 1025:
-            actions.main.mouse_action([action, 0, 0, 0])  # btn_1
+            actions.main.mouse_action([action_space[action], 0, 0, 0])  # btn_1
             sent.append([action, 'btn1'])
         elif action == 1026:
-            actions.main.mouse_action([action, 0, 0, 0])  # btn_2
+            actions.main.mouse_action([action_space[action], 0, 0, 0])  # btn_2
             sent.append([action, 'btn2'])
         elif action == 1027:
-            actions.main.mouse_action([action, 0, 0, 0])  # btn_3
+            actions.main.mouse_action([action_space[action], 0, 0, 0])  # btn_3
             sent.append([action, 'btn3'])
         elif action == 1028:
             actions.main.mouse_action([0, 0, 0, 0])  # none
             sent.append([action, 'none'])
         elif action == 1029:
-            actions.main.mouse_action([0, 0, 0, action])  # whl_dwn
+            actions.main.mouse_action([0, 0, 0, action_space[action]])  # whl_dwn
             sent.append([action, 'whl_dwn'])
         elif action == 1030:
-            actions.main.mouse_action([0, 0, 0, action])  # whl_none
+            actions.main.mouse_action([0, 0, 0, action_space[action]])  # whl_none
             sent.append([action, 'whl_none'])
         elif action == 1031:
-            actions.main.mouse_action([0, 0, 0, action])  # whl_up
+            actions.main.mouse_action([0, 0, 0, action_space[action]])  # whl_up
             sent.append([action, 'whl_up'])
     else:
         print('NullEvent')

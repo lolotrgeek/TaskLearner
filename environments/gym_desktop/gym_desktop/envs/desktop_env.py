@@ -114,19 +114,19 @@ class DesktopEnv(gym.Env):
                 elif action > 513 and action < 1025:
                     actions.main.mouse_action([0, 0, action, 0]) # delta_y
                 elif action == 1025:
-                    actions.main.mouse_action([action, 0, 0, 0]) # btn_1
+                    actions.main.mouse_action([action_space[action], 0, 0, 0]) # btn_1
                 elif action == 1026:
-                    actions.main.mouse_action([action, 0, 0, 0]) # btn_2
+                    actions.main.mouse_action([action_space[action], 0, 0, 0]) # btn_2
                 elif action == 1027:
-                    actions.main.mouse_action([action, 0, 0, 0]) # btn_3
+                    actions.main.mouse_action([action_space[action], 0, 0, 0]) # btn_3
                 elif action == 1028:
                     actions.main.mouse_action([0, 0, 0, 0]) # none
                 elif action == 1029:
-                    actions.main.mouse_action([0, 0, 0, action]) # whl_dwn
+                    actions.main.mouse_action([0, 0, 0, action_space[action]]) # whl_dwn
                 elif action == 1030:
-                    actions.main.mouse_action([0, 0, 0, action]) # whl_none
+                    actions.main.mouse_action([0, 0, 0, action_space[action]]) # whl_none
                 elif action == 1031:
-                    actions.main.mouse_action([0, 0, 0, action]) # whl_up                                                                                                                                           
+                    actions.main.mouse_action([0, 0, 0, action_space[action]]) # whl_up                                                                                                                                           
             else:
                 print('MouseEvent: ', str(action[1]), ',', str(action[2]))
                 pass
