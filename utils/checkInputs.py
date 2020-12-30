@@ -30,7 +30,7 @@ def on_move(x, y):
 def on_click(x, y, button, pressed):
     global done
     actions.append([button, x, y, 0])
-    print('{0} at {1}'.format('Pressed', (x, y)))
+    print('{0} at {1}'.format('Pressed', button, (x, y)))
 
 
 def on_scroll(x, y, dx, dy):
