@@ -19,15 +19,13 @@ echo 250 > configs/c.1/MaxPower
 
 # Add functions here
 mkdir -p functions/hid.usb0
-echo 1 > functions/hid.usb0/protocol
-echo 1 > functions/hid.usb0/subclass
-echo 3 > functions/hid.usb0/report_length
+echo 0 > functions/hid.usb0/protocol
+echo 0 > functions/hid.usb0/subclass
+echo 4 > functions/hid.usb0/report_length
 D=$(mktemp)
 echo -ne \\x05\\x01 >> "$D"      # USAGE_PAGE (Generic Desktop)
 echo -ne \\x09\\x02 >> "$D"      # USAGE (Mouse)
 echo -ne \\xA1\\x01 >> "$D"      # COLLECTION (Application)
-echo -ne \\x09\\x01 >> "$D"      #  USAGE (Pointer)
-echo -ne \\xA1\\x00 >> "$D"      #   COLLECTION (Application)
 echo -ne \\x05\\x09 >> "$D"      #    USAGE_PAGE (Button)
 echo -ne \\x19\\x01 >> "$D"      #    USAGE_MINIMUM (Button 1)
 echo -ne \\x29\\x03 >> "$D"      #    USAGE_MAXIMUM (Button 3)
@@ -53,9 +51,8 @@ echo -ne \\x25\\x7F >> "$D"      #    LOGICAL_MAXIMUM (127)
 echo -ne \\x75\\x08 >> "$D"      #    REPORT_SIZE (8)
 echo -ne \\x95\\x01 >> "$D"      #    REPORT_COUNT (1)
 echo -ne \\x81\\x06 >> "$D"      #    INPUT (Data,Var,Rel)
-echo -ne \\xC0 >> "$D"           #   END_COLLECTION
-echo -ne \\xC0 >> "$D"           # END_COLLECTION
-cp "$D" "functions/hid.usb0/report_desc"
+echo -ne \\xC0 >> "$D"           #  END_COLLECTION
+cp "$D" functions/hid.usb0/report_desc
 ln -s functions/hid.usb0 configs/c.1/
 
 ls /sys/class/udc > UDC
