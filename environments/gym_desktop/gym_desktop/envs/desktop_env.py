@@ -7,7 +7,7 @@ import mss
 import numpy as np
 import faulthandler
 from gym_desktop.envs.actions.actionMap import actions
-from gym_desktop.envs.actions.main import key_stroke, mouse_action
+from gym_desktop.envs.actions.main import key_stroke, mouse_action, key_release
 import imutils
 from imutils.video import WebcamVideoStream
 from random import randint
@@ -169,8 +169,8 @@ class DesktopEnv(gym.Env):
         self.last_time = self.start_time
 
         if self.debug is False:
-            actions.main.mouse_action(no_mouse)
-            actions.main.key_release()
+            mouse_action(no_mouse)
+            key_release()
         cv2.destroyAllWindows()
         if self.no_show is False:
             frame = self.camera.read()
