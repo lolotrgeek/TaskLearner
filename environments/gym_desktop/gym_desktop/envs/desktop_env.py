@@ -16,8 +16,8 @@ import pickle
 faulthandler.enable()
 
 # State Constants
-STATE_W = 1920
-STATE_H = 1080
+STATE_W = 640
+STATE_H = 480
 
 # Action Constants
 no_key = 0
@@ -43,7 +43,7 @@ class DesktopEnv(gym.Env):
       Size of window
 
     Actions:
-      Type: Discrete(1139) or [0-1138]
+      Type: Discrete(197) or [0-196]
       Mouse movements, button presses and Keystrikes.
 
     Rewards:
@@ -73,8 +73,9 @@ class DesktopEnv(gym.Env):
     def __init__(self):
         self.camera = WebcamVideoStream(src=0).start()
         self.action_space = spaces.Discrete(197)
+        self.state_space = self.camera.read().shape
         self.observation_space = spaces.Box(
-            low=0, high=255, shape=(STATE_H, STATE_W, 3), dtype=np.uint8
+            low=0, high=255, shape=self.state_space, dtype=np.uint8
         )
 
     def step(self, action=None):
@@ -152,7 +153,7 @@ class DesktopEnv(gym.Env):
             done = True
         return self.state, step_reward, done, {}
 
-    def reset(self, timelimit=1000, steplimit=100, debug=False, noShow=False):
+    def reset(self, timelimit=1000, steplimit=100, debug=True, noShow=False):
         """
         timelimit - int: seconds
 
@@ -171,6 +172,7 @@ class DesktopEnv(gym.Env):
         if self.debug is False:
             mouse_action(no_mouse)
             key_release()
+
         cv2.destroyAllWindows()
         if self.no_show is False:
             frame = self.camera.read()
