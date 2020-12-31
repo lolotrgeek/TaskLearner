@@ -6,7 +6,8 @@ import cv2
 import mss
 import numpy as np
 import faulthandler
-import gym_desktop.envs.actions as actions
+from gym_desktop.envs.actions.actionMap import actions
+from gym_desktop.envs.actions.main import key_stroke, mouse_action
 import imutils
 from imutils.video import WebcamVideoStream
 from random import randint
@@ -15,13 +16,12 @@ import pickle
 faulthandler.enable()
 
 # State Constants
-STATE_W = 1920   
+STATE_W = 1920
 STATE_H = 1080
 
 # Action Constants
-action_space = actions.actionMap.actions
-no_key=0
-no_mouse=[0,0,0,0]
+no_key = 0
+no_mouse = [0, 0, 0, 0]
 
 # Goal
 goal = np.array({})
@@ -35,7 +35,7 @@ class DesktopEnv(gym.Env):
       A Desktop GUI is rendered and the agent is given a task to complete. The agent submits states
       it believes to solve the task to a validation function. The validation function returns the distance
       the submitted state is from the goal state. This distance be expressed as a reward.
-    
+
     Source:
 
     Observation:
@@ -72,7 +72,7 @@ class DesktopEnv(gym.Env):
 
     def __init__(self):
         self.camera = WebcamVideoStream(src=0).start()
-        self.action_space = spaces.Discrete(1139)
+        self.action_space = spaces.Discrete(197)
         self.observation_space = spaces.Box(
             low=0, high=255, shape=(STATE_H, STATE_W, 3), dtype=np.uint8
         )
@@ -86,56 +86,62 @@ class DesktopEnv(gym.Env):
             # self.state = imutils.resize(frame, width=STATE_W)
             self.state = frame
         else:
-            self.state=np.array({})    
+            self.state = np.array({})
 
         done = False
         # Rewards
         action_reward = 1
         # distance (weighted pixels) from goal state, if 0 state equals goal
-        goal_reward = (np.sum(goal) - np.sum(self.state)) * -1
+        if self.debug is False:
+            goal_reward = (np.sum(goal) - np.sum(self.state)) * -1
+        else :
+            goal_reward = 1
+
         step_reward = action_reward + goal_reward
 
         # Actions:
-        
-        print(str(action))
-        if isinstance(actions.actions_space[action], list):
-            # integers which represent key presses
+        print('ACTION' , action)
+        if action == 0:
+            pass
+        elif isinstance(actions[action], list):
+            # Key Actions
             if self.debug is False:
-                actions.main.key_stroke(actions.actions_space[action])
+                key_stroke(actions[action])
             else:
-                print('KeyEvent:' ,str(actions.actions_space[action]))
+                print('KeyEvent:', actions[action])
                 pass
-                
-        elif isinstance(action_space[action], int):
-            # list which represent x,y coordinate with a buttonmask (clicks)
+
+        elif isinstance(actions[action], int):
+            # Mouse Actions
             if self.debug is False:
-                if action < 513:
-                    actions.main.mouse_action([0, action, 0, 0]) # delta_x
-                elif action > 512 and action < 1025:
-                    actions.main.mouse_action([0, 0, action, 0]) # delta_y
-                elif action == 1025:
-                    actions.main.mouse_action([action_space[action], 0, 0, 0]) # btn_1
-                elif action == 1026:
-                    actions.main.mouse_action([action_space[action], 0, 0, 0]) # btn_2
-                elif action == 1027:
-                    actions.main.mouse_action([action_space[action], 0, 0, 0]) # btn_3
-                elif action == 1028:
-                    actions.main.mouse_action([0, 0, 0, 0]) # none
-                elif action == 1029:
-                    actions.main.mouse_action([0, 0, 0, action_space[action]]) # whl_dwn
-                elif action == 1030:
-                    actions.main.mouse_action([0, 0, 0, action_space[action]]) # whl_none
-                elif action == 1031:
-                    actions.main.mouse_action([0, 0, 0, action_space[action]]) # whl_up                                                                                                                                           
+                if action < 41:
+                    mouse_action([0, actions[action], 0, 0])  # delta_x
+                    print('delta_x ', actions[action])
+                elif action > 41 and action < 83:
+                    mouse_action([0, 0, actions[action], 0])  # delta_y
+                elif action == 83:
+                    mouse_action([actions[action], 0, 0, 0])  # btn_1
+                elif action == 84:
+                    mouse_action([actions[action], 0, 0, 0])  # btn_2
+                elif action == 85:
+                    mouse_action([actions[action], 0, 0, 0])  # btn_3
+                elif action == 86:
+                    mouse_action([0, 0, 0, 0])  # none
+                elif action == 87:
+                    mouse_action([0, 0, 0, actions[action]])  # whl_dwn
+                elif action == 88:
+                    mouse_action([0, 0, 0, actions[action]])  # whl_none
+                elif action == 89:
+                    mouse_action([0, 0, 0, actions[action]])  # whl_up
             else:
-                print('MouseEvent: ', str(action[1]), ',', str(action[2]))
+                print('MouseEvent: ', actions[action])
                 pass
-        else: 
+        else:
             if self.debug is not False:
                 print('NullEvent')
             pass
 
-        self.step_count+= 1
+        self.step_count += 1
         if self.step_count >= self.step_limit:
             print("Ending, step limit reached: ", self.step_count)
             done = True
@@ -152,10 +158,10 @@ class DesktopEnv(gym.Env):
 
         steplimit - int: number of steps
         """
-        self.debug=debug
-        self.no_show=noShow
+        self.debug = debug
+        self.no_show = noShow
 
-        self.step_count=0
+        self.step_count = 0
         self.step_limit = steplimit
 
         self.time_limit = timelimit
@@ -172,7 +178,7 @@ class DesktopEnv(gym.Env):
             # self.state = imutils.resize(frame, width=STATE_W)
             self.state = frame
         else:
-            self.state=np.array({})   
+            self.state = np.array({})
         # TODO: clear clipboard
         return self.state
 
