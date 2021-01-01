@@ -30,6 +30,11 @@ del model # remove to demonstrate saving and loading
 
 model = DQN.load("deepq_desktop")
 
+last_state = None
+def unique_reward(state):
+    # rewards a current state that is different from the last state
+    return (np.sum(last_state) - np.sum(state))
+    
 # Run Environment
 for episode in range(episodes):
     obs = env.reset()
@@ -41,6 +46,7 @@ for episode in range(episodes):
             break
         action, _states = model.predict(obs, deterministic=True)
         obs, reward, done, info = env.step(action)
+        last_state = obs
         env.render()
     print('Reward:', reward)
 # Stop Environment
