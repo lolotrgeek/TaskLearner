@@ -70,24 +70,32 @@ class DesktopEnv(gym.Env):
 
     # "rgb_array" returns "numpy.ndarray"
 
-    def __init__(self):
+    def __init__(self, debug=False, show=False, timelimit=1000, steplimit=100):
+        """
+        timelimit - int: seconds
+        
+        steplimit - int: number of steps
+
+        """
+
         self.camera = WebcamVideoStream(src=0).start()
         self.action_space = spaces.Discrete(197)
         self.state_space = self.camera.read().shape
         self.observation_space = spaces.Box(
             low=0, high=255, shape=self.state_space, dtype=np.uint8
         )
+        self.debug = debug
+        self.show = show
+        self.step_limit = steplimit
+        self.time_limit = timelimit
 
     def step(self, action=None):
         err_msg = "%r (%s) invalid" % (action, type(action))
         assert self.action_space.contains(action), err_msg
         self.last_time = time.time()
-        if self.no_show is False:
-            frame = self.camera.read()
-            # self.state = imutils.resize(frame, width=STATE_W)
-            self.state = frame
-        else:
-            self.state = np.array({})
+        frame = self.camera.read()
+        # self.state = imutils.resize(frame, width=STATE_W)
+        self.state = frame
 
         done = False
         # Rewards
@@ -153,19 +161,8 @@ class DesktopEnv(gym.Env):
             done = True
         return self.state, step_reward, done, {}
 
-    def reset(self, timelimit=1000, steplimit=100, debug=True, noShow=False):
-        """
-        timelimit - int: seconds
-
-        steplimit - int: number of steps
-        """
-        self.debug = debug
-        self.no_show = noShow
-
+    def reset(self):
         self.step_count = 0
-        self.step_limit = steplimit
-
-        self.time_limit = timelimit
         self.start_time = time.time()
         self.last_time = self.start_time
 
@@ -174,13 +171,10 @@ class DesktopEnv(gym.Env):
             key_release()
 
         cv2.destroyAllWindows()
-        if self.no_show is False:
-            frame = self.camera.read()
-            # TODO: optimize resizing, implment CaptureStream.py?
-            # self.state = imutils.resize(frame, width=STATE_W)
-            self.state = frame
-        else:
-            self.state = np.array({})
+        frame = self.camera.read()
+        # TODO: optimize resizing, implment CaptureStream.py?
+        # self.state = imutils.resize(frame, width=STATE_W)
+        self.state = frame
         # TODO: clear clipboard
         return self.state
 
@@ -193,7 +187,7 @@ class DesktopEnv(gym.Env):
                 print("fps: {}".format(1 / (time.time() - self.last_time)))
             except ZeroDivisionError:
                 pass
-        if self.no_show is False:
+        if self.show is True:
             cv2.imshow("Frame", self.state)
             cv2.waitKey(1)
         return self.state

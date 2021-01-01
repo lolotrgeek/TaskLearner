@@ -4,7 +4,7 @@ from gym.wrappers import Monitor
 import gym_desktop
 
 # Takes no actions, simply observes the environment
-env = gym.make('Desktop-v0')
+env = gym.make('Desktop-v0', debug=True, show=True)
 
 max_ep = 10
 
@@ -12,7 +12,7 @@ for ep_cnt in range(max_ep):
     step_cnt = 0
     ep_reward = 0
     done = False
-    state = env.reset(debug=True, noShow=False)
+    state = env.reset()
 
     while not done:
         next_state, reward, done, _ = env.step()

@@ -11,7 +11,7 @@ from pyinstrument import Profiler
 profiler = Profiler()
 profiler.start()
 
-env = gym.make('Desktop-v0')
+env = gym.make('Desktop-v0', debug=True, show=True)
 max_ep = 10
 actions = []
 
@@ -22,7 +22,7 @@ with open('listfile.data', 'rb') as filehandle:
 step_cnt = 0
 ep_reward = 0
 done = False
-state = env.reset(debug=True, noShow=False)
+state = env.reset()
 
 while not done:
     if step_cnt >= len(actions):

@@ -6,6 +6,7 @@ import json, sys, os
 from os import path
 from _policies import BinaryActionLinearPolicy # Different file so it can be unpickled
 
+#TODO: UNFINISHED
 def cem(f, th_mean, batch_size, n_iter, elite_frac, initial_std=1.0):
     """
     Generic implementation of the cross-entropy method for maximizing a black-box function

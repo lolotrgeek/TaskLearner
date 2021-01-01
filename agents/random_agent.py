@@ -21,14 +21,14 @@ class RandomAgent(object):
 
 if __name__ == '__main__':
     # Run Environment
-    env = gym.make('Desktop-v0')
+    env = gym.make('Desktop-v0', steplimit=100, debug=True, show=True)
     outdir = '/tmp/random-agent-results'
     env = Monitor(env, directory=outdir, force=True)
     agent = RandomAgent(env.action_space)
     episodes = 10
    
     for episode in range(episodes):
-        state = env.reset(steplimit=100, debug=False, noShow=False)
+        state = env.reset()
         reward = 0
         done = False
         print('episode:' , episode)
