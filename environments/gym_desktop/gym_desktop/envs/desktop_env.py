@@ -3,7 +3,6 @@ from gym import error, spaces, utils
 from gym.utils import seeding
 import time
 import cv2
-import mss
 import numpy as np
 import faulthandler
 from gym_desktop.envs.actions.actionMap import actions
