@@ -1,16 +1,19 @@
 import gym
 from gym import error, spaces, utils
 from gym.utils import seeding
-import time
-import cv2
-import numpy as np
-import faulthandler
+
 from gym_desktop.envs.actions.actionMap import actions
 from gym_desktop.envs.actions.main import key_stroke, mouse_action, key_release
+
+import numpy as np
+import cv2
 import imutils
 from imutils.video import WebcamVideoStream
-from random import randint
 import pickle
+
+import time
+import faulthandler
+from random import randint
 
 faulthandler.enable()
 
@@ -30,53 +33,45 @@ with open('goal.state', 'rb') as filehandle:
 
 class DesktopEnv(gym.Env):
     """
-    Description:
-      A Desktop GUI is rendered and the agent is given a task to complete. The agent submits states
-      it believes to solve the task to a validation function. The validation function returns the distance
-      the submitted state is from the goal state. This distance be expressed as a reward.
+    Desktop Gym Environment
 
-    Source:
+        Description:
+        A Desktop GUI is rendered and the agent is given a task to complete. The agent submits states
+        it believes to solve the task to a validation function. The validation function returns the distance
+        the submitted state is from the goal state. This distance be expressed as a reward.
 
-    Observation:
-      Type: Box(n)
-      Size of window
+        Source:
 
-    Actions:
-      Type: Discrete(197) or [0-196]
-      Mouse movements, button presses and Keystrikes.
+        Observation:
+        Type: Box(n)
+        Size of window
 
-    Rewards:
-      action  1
-      statechange  delta(currentstate, laststate) ...with decay?
-      distance from state
-      [energyuse]
+        Actions:
+        Type: Discrete(197) or [0-196]
+        Mouse movements, button presses and Keystrikes.
+
+        Rewards:
+        action  1
+        statechange  delta(currentstate, laststate) ...with decay?
+        distance from state
+        [energyuse]
 
 
-    Starting State:
-      reload chromium at fullscreen
-      center mouse
-      release all keys
+        Starting State:
+        reload chromium at fullscreen
+        center mouse
+        release all keys
 
-    Episode Termination:
-        time limit - 1000 seconds 
-        step limit - 100 steps
+        Episode Termination:
+            time limit - 1000 seconds 
+            step limit - 100 steps
 
-    Solved Requirements:
-      Considered solved when the given state returns 0 (goal = state) when passes to the validation function.
+        Solved Requirements:
+        Considered solved when the given state returns 0 (goal = state) when passes to the validation function.
     """
-
     metadata = {'render.modes': ['human', "rgb_array", "state_pixels"]}
 
-    # "rgb_array" returns "numpy.ndarray"
-
     def __init__(self, debug=False, show=False, timelimit=1000, steplimit=100):
-        """
-        timelimit - int: seconds
-        
-        steplimit - int: number of steps
-
-        """
-
         self.camera = WebcamVideoStream(src=0).start()
         self.action_space = spaces.Discrete(197)
         self.state_space = self.camera.read().shape
@@ -108,7 +103,6 @@ class DesktopEnv(gym.Env):
         step_reward = action_reward + goal_reward
 
         # Actions:
-        print('ACTION' , action)
         if action == 0:
             pass
         elif isinstance(actions[action], list):
