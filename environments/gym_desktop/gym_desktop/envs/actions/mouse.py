@@ -3,6 +3,8 @@
 # https://www.raspberrypi.org/forums/viewtopic.php?t=234495
 # https://wiki.osdev.org/Mouse_Input
 from . import write as hid_write
+from . import send as hid_send
+
 
 def send_mouse_event_rel(mouse_path, buttons, relative_x, relative_y,
                      vertical_wheel_delta, horizontal_wheel_delta):
@@ -40,6 +42,10 @@ def _scale_mouse_coordinates(relative_x, relative_y):
     y = int(relative_y * max_hid_value)
     return x, y
 
-def send_mouse_event(mouse_path, button, dx, dy, wheel):
+def send_mouse_event_local(mouse_path, button, dx, dy, wheel):
     report = [button, dx & 0xff, dy & 0xff, wheel & 0xff]
     hid_write._write_to_hid_interface_immediately(mouse_path, report)
+
+def send_mouse_event(server_address, button, dx, dy, wheel):
+    report = [button, dx & 0xff, dy & 0xff, wheel & 0xff]
+    hid_send.send(server_address, report)

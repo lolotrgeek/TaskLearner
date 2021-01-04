@@ -1,11 +1,11 @@
 # gymKeyStrokes
 
-Based on [piKeyStrokes](https://github.com/lolotrgeek/piKeyStrokes)
+Based on [piKeyStrokes](https://github.com/lolotrgeek/piKeyStrokes/tree/remote) remote branch.
 
-This replaces the piKeyStrokes API with a gym friendly API.
+This overrides the piKeyStrokes API with a gym friendly API.
 
 ## Install
-Need to install piKeyStrokes.
+[Install piKeyStrokes.](https://github.com/lolotrgeek/piKeyStrokes/tree/remote#install)
 
 ## Usage
 `humanMap.py` is for encoding actions into human readable format
@@ -22,27 +22,3 @@ Actions are keypresses, each keypress can be combined with modifiers
 | 1 |    "KEYCODE_B"  |   0x05 |
 | 2 | "KEYCODE_C" |    0x06 |
 |...|
-
-
-## API
-### press(key)
-> key - type: `int`
-
-> Press the given key
-
-```
-# write 'a'
-press(1)
-```
-
-### pressModified(key)
-> key - type: `int`
-
-> Press the given key while holding SHIFT
-```
-# write '!'
-pressModified(27)
-```
-
-### release()
-releases all keys/modifiers
