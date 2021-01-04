@@ -20,28 +20,34 @@ class RandomAgent(object):
         return self.action_space.sample()
 
 if __name__ == '__main__':
-    # Run Environment
-    env = gym.make('Desktop-v0', steplimit=100, debug=True, show=True)
-    outdir = '/tmp/random-agent-results'
-    env = Monitor(env, directory=outdir, force=True)
-    agent = RandomAgent(env.action_space)
-    episodes = 10
-   
-    for episode in range(episodes):
-        state = env.reset()
-        reward = 0
-        done = False
-        print('episode:' , episode)
-        while True:
-            if done is True:
-                break
-            action = agent.act(state, reward, done)
-            next_state, reward, done, _ = env.step(action)
-            env.render()
-            state = next_state
-        print('reward:', reward)
-    # Stop Environment
-    env.close()
-    profiler.stop()
+    try:
+        # Run Environment
+        env = gym.make('Desktop-v0', steplimit=100, debug=False, show=True)
+        outdir = '/tmp/random-agent-results'
+        env = Monitor(env, directory=outdir, force=True)
+        agent = RandomAgent(env.action_space)
+        episodes = 10
+    
+        for episode in range(episodes):
+            state = env.reset()
+            reward = 0
+            done = False
+            print('episode:' , episode)
+            while True:
+                if done is True:
+                    break
+                action = agent.act(state, reward, done)
+                next_state, reward, done, _ = env.step(action)
+                env.render()
+                state = next_state
+            print('reward:', reward)
+    except ConnectionRefusedError:
+        print('FAILED: Unable to Connect. Try running in debug mode.')
+    except:
+        print ("FAILED: Unexpected error:", sys.exc_info()[0])
+        raise        
+    finally:    
+        env.close()
+        profiler.stop()
 
 print(profiler.output_text(unicode=True, color=True))

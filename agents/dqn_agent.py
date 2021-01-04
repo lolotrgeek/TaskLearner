@@ -34,23 +34,30 @@ last_state = None
 def unique_reward(state):
     # rewards a current state that is different from the last state
     return (np.sum(last_state) - np.sum(state))
-    
-# Run Environment
-for episode in range(episodes):
-    obs = env.reset()
-    reward = 0
-    done = False
-    print('Episode:' , episode)
-    while True:
-        if done is True:
-            break
-        action, _states = model.predict(obs, deterministic=True)
-        obs, reward, done, info = env.step(action)
-        last_state = obs
-        env.render()
-    print('Reward:', reward)
-# Stop Environment
-env.close()
-profiler.stop()
+
+if __name__ == '__main__':
+    try:   
+        # Run Environment
+        for episode in range(episodes):
+            obs = env.reset()
+            reward = 0
+            done = False
+            print('Episode:' , episode)
+            while True:
+                if done is True:
+                    break
+                action, _states = model.predict(obs, deterministic=True)
+                obs, reward, done, info = env.step(action)
+                last_state = obs
+                env.render()
+            print('Reward:', reward)
+    except ConnectionRefusedError:
+        print('FAILED: Unable to Connect. Try running in debug mode.')
+    except:
+        print ("FAILED: Unexpected error:", sys.exc_info()[0])
+        raise        
+    finally:    
+        env.close()
+        profiler.stop()
 
 print(profiler.output_text(unicode=True, color=True))
