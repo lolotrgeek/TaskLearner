@@ -16,5 +16,8 @@ with open('compare.state', 'rb') as filehandle:
 
 print((np.sum(goal) - np.sum(same)) * -1) # result -> 0
 print((np.sum(goal) - np.sum(compare)) * -1) # result -> -7509911
-cv2.imshow("Goal", goal)
-cv2.waitKey(0)
+try:
+    cv2.imshow("Goal", goal)
+    cv2.waitKey(0)
+except KeyboardInterrupt:
+    exit()
