@@ -17,7 +17,7 @@ img.fill(0) # or img[:] = 255
 
 # screen is black, maybe asleep, try waking up by pressing space
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect('169.254.2.68', 10000)
+sock.connect(('169.254.2.68', 10000))
 if np.array_equal(img, im):
     try:
         # Send data
