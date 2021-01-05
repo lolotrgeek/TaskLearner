@@ -12,7 +12,7 @@ keyboard_path = os.environ.get('KEYBOARD_PATH', '/dev/hidg0')
 mouse_path = os.environ.get('MOUSE_PATH', '/dev/hidg1')
 # Keyboard layout on target computer.
 keyboard_layout = os.environ.get('KEYBOARD_LAYOUT', 'QWERTY')
-server_address = ('192.168.1.248', 10000)
+server_address = ('169.254.2.68', 10000)
 
 def key_stroke(key_event):
     '''

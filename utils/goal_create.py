@@ -5,6 +5,8 @@
 import pickle
 import cv2
 import numpy as np
+import socket
+import sys
 
 camera = cv2.VideoCapture(0)
 ret, im = camera.read(0)
@@ -13,18 +15,22 @@ ret, im = camera.read(0)
 img = np.zeros(im.shape,dtype=np.uint8)
 img.fill(0) # or img[:] = 255
 
-NULL_CHAR = chr(0)
-# for writing to HID
-def write_report(report):
-    with open('/dev/hidg0', 'rb+') as fd:
-        fd.write(report.encode())
-
+# screen is black, maybe asleep, try waking up by pressing space
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect('169.254.2.68', 10000)
 if np.array_equal(img, im):
-    print('Trying to wake...')
-    # screen is black, maybe asleep, try waking up by pressing space
-    write_report(NULL_CHAR*2+chr(44)+NULL_CHAR*5)
-    # Release all keys
-    write_report(NULL_CHAR*8)
+    try:
+        # Send data
+        message = bytearray([0x2c,0x0])
+        sock.sendall(message)
+        amount_received = 0
+        amount_expected = len(message)
+        while amount_received < amount_expected:
+            data = sock.recv(16)
+            amount_received += len(data)
+    except:
+        print(sys.stderr, 'closing socket')
+        sock.close()    
 
 while True:
     if np.array_equal(img, im):
