@@ -53,25 +53,6 @@ Currently, the system is setup to send actions to a remote server. Without a ser
 
  Then run the above agent command.
 
-## Environment
-### State
-Screen captured as pixels.
-
-### Actions
-- Mouse
-    - Move 2
-    - Click 2
-    - Scroll up 2 
-    - Scroll down 2
-
-- Keyboard
-    - Standard keys: 61     
-    - Modified keys: 61
-
-- Special
-    - Copy 2
-    - Paste 2
-    - Open 2
 
 ## Debugging
 For state debugging run `agents/observer_agent.py`.
