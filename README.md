@@ -12,11 +12,15 @@ Create agents that...
 This setup uses a Raspberry Pi that consumes pixels from hdmi and sends mouse and keyboard events over usb.
 
 What is needed:
-- a raspberry pi with OTG (4/zero)
+- actor: a raspberry pi with OTG (4/zero)
+- client: a machine that accepts keyboard/mouse via usb
+- agent: a machine that runs agent and sends actions to raspberry pi 
 - a usb-hdmi video capture card
 - optional: USB split power cable, is required if there are power issues
 
-Install the following on the Pi
+### Install on the agent
+1. plug in hdmi video capture card
+2. setup software environment with the following commands:
 ```
 $ pip install gym opencv-python numpy pyinstrument imutils screeninfo pynput torch stable-baselines3 
 $ pip install -e ./environments/gym_desktop 
@@ -27,8 +31,18 @@ or
 $ conda activate tracker
 ```
 
+### Install on the actor
+1. Follow install instructions here: [piKeyStrokes](https://github.com/lolotrgeek/piKeyStrokes/tree/remote)
+2. run an instance of piKeyStrokes
+
+### Install on client
+1. plug usb from raspberry pi OTG port to a usb on client
+2. plug hdmi from client into hdmi capture card on agent
+
 ## Usage
 Pick an agent from `/agents`
+
+Example:
 ```
 python agents/random_agent.py
 ```
