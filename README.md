@@ -18,7 +18,7 @@ What is needed:
 
 Install the following on the Pi
 ```
-$ pip install gym opencv-python numpy pyinstrument imutils screeninfo
+$ pip install gym opencv-python numpy pyinstrument imutils screeninfo pynput torch stable-baselines3 
 $ pip install -e ./environments/gym_desktop 
 ```
 or
