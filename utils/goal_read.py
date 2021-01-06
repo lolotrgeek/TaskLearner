@@ -3,6 +3,7 @@
 import pickle
 import cv2
 import numpy as np
+import sys
 
 goal = None
 compare = None
@@ -14,10 +15,17 @@ with open('goal.state', 'rb') as filehandle:
 with open('compare.state', 'rb') as filehandle:
     compare = pickle.load(filehandle)
 
-print((np.sum(goal) - np.sum(same)) * -1) # result -> 0
-print((np.sum(goal) - np.sum(compare)) * -1) # result -> -7509911
+print((np.sum(goal) - np.sum(same)) * -1) 
+print((np.sum(goal) - np.sum(compare)) * -1) 
+
 try:
-    cv2.imshow("Goal", goal)
-    cv2.waitKey(0)
-except KeyboardInterrupt:
-    exit()
+    while True:
+        cv2.imshow("Goal", goal)
+        key = cv2.waitKeyEx(0)
+        print('press any key to exit')
+        if key > -1:
+            break
+except:
+    pass
+cv2.destroyAllWindows()
+sys.exit()
