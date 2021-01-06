@@ -47,8 +47,8 @@ def on_press(key):
 def mouse_event(event, x, y, flags, param):
     global last_move
     if last_move is not None:
-        abs_x = last_move[0] - x
-        abs_y = last_move[1] - y
+        abs_x = x - last_move[0]
+        abs_y = y - last_move[1]
         button = 0
         wheel = 0
         if event == 1 or event == 2:
