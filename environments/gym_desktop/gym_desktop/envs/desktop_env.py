@@ -118,7 +118,6 @@ class DesktopEnv(gym.Env):
             if self.debug is False:
                 if action < 42:
                     mouse_action([0, actions[action], 0, 0])  # delta_x
-                    print('delta_x ', actions[action])
                 elif action > 41 and action < 83:
                     mouse_action([0, 0, actions[action], 0])  # delta_y
                 elif action == 83:
