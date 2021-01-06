@@ -39,7 +39,11 @@ def on_press(key):
         key = key.char
     try:
         keycode = keymap[key]
-        send(keycode)
+        buf = [0] * 8
+        buf[0] = keycode[1] # modifier
+        buf[2] = keycode[0] # hid code
+        send(buf)
+        send([0] * 8) # release keys
 
     except KeyError:
         print('special key')
