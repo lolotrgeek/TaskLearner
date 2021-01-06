@@ -17,7 +17,7 @@ profiler = Profiler()
 profiler.start()
 
 # Setup Environment
-env = gym.make('Desktop-v0', debug=True, show=True, steplimit=100)
+env = gym.make('Desktop-v0', debug=False, show=True, steplimit=100)
 outdir = '/tmp/random-agent-results'
 env = Monitor(env, directory=outdir, force=True)
 episodes = 10
