@@ -57,7 +57,7 @@ def mouse_event(event, x, y, flags, param):
             wheel = 1
         elif flags < 0:
             wheel = -1
-        send([button, abs_x, abs_y, wheel])
+        send([button, abs_x & 0xff, abs_y & 0xff, wheel& 0xff])
     last_move = [x, y]
 
 def send(event):
