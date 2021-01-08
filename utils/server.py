@@ -1,35 +1,39 @@
 import socket
-import sys
+import threading
 
-# Create a TCP/IP socket
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# https://stackoverflow.com/a/23828265
+server_address = 'localhost'
+server_port = 10000
 
-# Bind the socket to the port
-server_address = ('169.254.2.68', 10000)
-print(sys.stderr, 'starting up on %s port %s' % server_address)
-sock.bind(server_address)
+class ThreadedServer(object):
+    def __init__(self, host, port):
+        self.host = host
+        self.port = port
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.sock.bind((self.host, self.port))
 
-# Listen for incoming connections
-sock.listen(1)
-
-while True:
-    # Wait for a connection
-    print(sys.stderr, 'waiting for a connection')
-    connection, client_address = sock.accept()
-    try:
-        print(sys.stderr, 'connection from', client_address)
-
-        # Receive the data in small chunks and retransmit it
+    def listen(self):
+        self.sock.listen(5)
         while True:
-            data = connection.recv(16)
-            print(sys.stderr, 'received "%s"' % data)
-            if data:
-                print(sys.stderr, 'sending data back to the client')
-                connection.sendall(data)
-            else:
-                print(sys.stderr, 'no more data from', client_address)
-                break
+            client, address = self.sock.accept()
+            client.settimeout(60)
+            threading.Thread(target = self.listenToClient,args = (client,address)).start()
 
-    finally:
-        # Clean up the connection
-        connection.close()
+    def listenToClient(self, client, address):
+        size = 1024
+        while True:
+            try:
+                data = client.recv(size)
+                if data:
+                    # Set the response to echo back the recieved data 
+                    response = data
+                    client.send(response)
+                else:
+                    raise print('Client disconnected')
+            except:
+                client.close()
+                return False
+
+if __name__ == "__main__":
+    ThreadedServer(server_address,server_port).listen()
