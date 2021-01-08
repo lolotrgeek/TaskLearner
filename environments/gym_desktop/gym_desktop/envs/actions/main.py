@@ -6,12 +6,7 @@ from . import mouse as fake_mouse
 from . import write as hid_write
 
 logger = logging.getLogger(__name__)
-# Location of file path at which to write keyboard HID input.
-keyboard_path = os.environ.get('KEYBOARD_PATH', '/dev/hidg0')
-# Location of file path at which to write mouse HID input.
-mouse_path = os.environ.get('MOUSE_PATH', '/dev/hidg1')
-# Keyboard layout on target computer.
-keyboard_layout = os.environ.get('KEYBOARD_LAYOUT', 'QWERTY')
+
 server_address = ('192.168.1.248', 10000)
 
 def key_stroke(key_event):
@@ -41,7 +36,7 @@ def mouse_action(mouse_event):
     ----------
     mouse_event - list 
 
-    mouse_event[0] - int, buttonmask 
+    mouse_event[0] - int, button 
 
     mouse_event[1] - int, x  
 
@@ -63,9 +58,3 @@ def key_release():
         fake_keyboard.release_keys(server_address)
     except hid_write.WriteError as e:
         logger.error('Failed to release keys: %s', e)
-
-# def main():
-#     return
-
-# if __name__ == '__main__':
-#     main()

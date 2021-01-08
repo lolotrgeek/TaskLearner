@@ -5,6 +5,7 @@ connection = False
 def send(server_address, report):
     global connection
     if connection is False:
+        print('connecting...')
         sock.connect(server_address)
         connection = True
     try:
@@ -23,5 +24,5 @@ def send(server_address, report):
             # print(sys.stderr, 'received "%s"' % data)
 
     except:
-        print(sys.stderr, 'closing socket')
+        print('closing socket')
         sock.close()    

@@ -5,7 +5,6 @@
 from . import write as hid_write
 from . import send as hid_send
 
-
 def send_mouse_event_rel(mouse_path, buttons, relative_x, relative_y,
                      vertical_wheel_delta, horizontal_wheel_delta):
     '''
