@@ -17,32 +17,37 @@ profiler = Profiler()
 profiler.start()
 
 # Setup Environment
-env = gym.make('Desktop-v0', debug=False, show=True, steplimit=100)
+print('Envrionment Setup...')
+env = gym.make('Desktop-v0', debug=False, show=False, steplimit=500)
 outdir = '/tmp/random-agent-results'
 env = Monitor(env, directory=outdir, force=True)
 episodes = 10
 # Setup Agent
+print('Agent Setup...')
 model = DQN(MlpPolicy, env, verbose=0, buffer_size=100)
+print('Returning Trained Model...')
 model.learn(total_timesteps=10000, log_interval=4)
+print('Saving Trained Model...')
 model.save("deepq_desktop")
 
 del model # remove to demonstrate saving and loading
-
+print('Loading Trained Model...')
 model = DQN.load("deepq_desktop")
 
-last_state = None
 def unique_reward(state):
     # rewards a current state that is different from the last state
     return (np.sum(last_state) - np.sum(state))
 
 if __name__ == '__main__':
-    try:   
+    try: 
+        print('Running Environment')
+        last_state = None          
         # Run Environment
         for episode in range(episodes):
+            print('Episode:' , episode)
             obs = env.reset()
             reward = 0
             done = False
-            print('Episode:' , episode)
             while True:
                 if done is True:
                     break
