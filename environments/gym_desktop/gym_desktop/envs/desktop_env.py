@@ -48,7 +48,7 @@ class DesktopEnv(gym.Env):
 
         Actions:
         Type: Discrete(197) or [0-196]
-        Mouse movements, button presses and Keystrikes.
+        Mouse movements, button presses and key strokes.
 
         Rewards:
         action  1
@@ -56,9 +56,8 @@ class DesktopEnv(gym.Env):
         distance from state
         [energyuse]
 
-
         Starting State:
-        reload chromium at fullscreen
+        reload desktop GUI
         center mouse
         release all keys
 
@@ -73,11 +72,11 @@ class DesktopEnv(gym.Env):
 
     def __init__(self, debug=False, show=False, timelimit=1000, steplimit=100):
         self.camera = WebcamVideoStream(src=0).start()
-        self.action_space = spaces.Discrete(197)
         self.state_space = self.camera.read().shape
         self.observation_space = spaces.Box(
             low=0, high=255, shape=self.state_space, dtype=np.uint8
         )
+        self.action_space = spaces.Discrete(197)
         self.debug = debug
         self.show = show
         self.step_limit = steplimit
@@ -88,9 +87,7 @@ class DesktopEnv(gym.Env):
         assert self.action_space.contains(action), err_msg
         self.last_time = time.time()
         frame = self.camera.read()
-        # self.state = imutils.resize(frame, width=STATE_W)
         self.state = frame
-
         done = False
         # Rewards
         action_reward = 1
@@ -164,8 +161,6 @@ class DesktopEnv(gym.Env):
 
         cv2.destroyAllWindows()
         frame = self.camera.read()
-        # TODO: optimize resizing, implment CaptureStream.py?
-        # self.state = imutils.resize(frame, width=STATE_W)
         self.state = frame
         # TODO: clear clipboard
         return self.state
