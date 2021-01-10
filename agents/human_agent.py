@@ -1,113 +1,125 @@
 import gym
-import cv2
 import time
 from gym.wrappers import Monitor
 import gym_desktop
-from pynput import keyboard, mouse
-from screeninfo import get_monitors
+import cv2
+import socket
+import sys
+from time import sleep
+from pynput import keyboard
+from actionMap import actions, actions_x, actions_y
 
-# UNFINISHED - actions are not properly applied
-# listen to physical hid event
-# convert to action
-# write event to OTG
+# Setup View
+camera = cv2.VideoCapture(0)
+ret, im = camera.read(0)
+cv2.namedWindow("Frame")
 
-keymap = {"a"	: 1, "b"	: 2, "c"	: 3, "d"	: 4, "e"	: 5, "f"	: 6, "g"	: 7, "h"	: 8, "i"	: 9, "j"	: 10, "k"	: 11, "l"	: 12, "m"	: 13, "n"	: 14, "o"	: 15, "p"	: 16, "q"	: 17, "r"	: 18, "s"	: 19, "t"	: 20, "u"	: 21, "v"	: 22, "w"	: 23, "x"	: 24, "y"	: 25, "z"	: 26, "1"	: 27, "2"	: 28, "3"	: 29, "4"	: 30, "5"	: 31, "6"	: 32, "7"	: 33, "8"	: 34,
-          "9"	: 35, "0"	: 36, "enter"	: 37, "esc"	: 38, "backspace"	: 39, "tab"	: 40, "space"	: 41, "-"	: 42, "=": 43, "["	: 44, "]"	: 45, "\\"	: 46, "HASH": 47, ";"	: 48, "'"	: 49, "ACCENT_GRAVE": 50, ","	: 51, "."	: 52, "/"	: 53, "home"	: 54, "end"	: 55, "right"	: 56, "left"	: 57, "down"	: 58, "up"	: 59, "LESS_THAN"	: 60, "EXECUTE"	: 61, }
-mousemap = {"left": 1, "right": 2, "middle": 4}
-actions = []
-last_action = time.time()
+dimensions = im.shape
+height = dimensions[0]
+width = dimensions[1]
+
+# Setup Envrionment
+env = gym.make('Desktop-v0', debug=False, show=False, steplimit=0, timelimit=0)
+
+# Action Vars
+last_move = None
+action = None
 done = False
-screen = get_monitors()[0]
-
-def relative_pos(pos, total):
-    """
-    pos - int : position of cursor
-    total - int : total width or height
-    """
-    return min(1.0, max(0.0, pos / total))
-
-def action():
-    global last_action
-    # actions.append({"wait": time.time() - last_action})
-    last_action = time.time()
 
 def on_press(key):
-    '''
-    when a key is pressed, add it to the list of actions to be taken by the agent
-    '''
+    global done
     modifier = str(key).startswith('Key.')
     if modifier is True:
         key = str(str(key).split('.')[1])
     else:
         key = key.char
-
+    if key == 'esc':
+        done = True
     try:
-        keycode = keymap[key]
-        actions.append(keycode)
+        action = actions[key]
     except KeyError:
-        # print('special key')
-        return
+        print('special key')
 
-def on_move(x, y):
-    action()
-    relative_x = relative_pos(x, screen.width)
-    relative_y = relative_pos(y, screen.height)
-    actions.append([0, relative_x, relative_y, 0, 0])
-    print('Pointer moved to {0}'.format(
-        (x, y)))
+def relative_pos(pos, total):
+    return min(1.0, max(0.0, pos / total))
+
+def scale_mouse_coordinates(relative_x, relative_y):
+    # This comes from LOGICAL_MAXIMUM in the mouse HID descriptor.
+    max_hid_value = 32767.0
+    x = int(relative_x * max_hid_value)
+    y = int(relative_y * max_hid_value)
+    return x, y
+
+def mouse_event(event, x, y, flags, param):
+    global last_move
+    global width
+    global height
+    rel_x = relative_pos(x, width)
+    rel_y = relative_pos(y, height)
+    scale_x, scale_y = scale_mouse_coordinates(rel_x, rel_y)
+
+    if last_move is None:
+        last_move = [x, y]
+
+    abs_x = x - last_move[0]
+    abs_y = y - last_move[1]
+
+    button = 0
+    wheel = 0
+
+    if event == 1 or event == 2:
+        button = event
+    if flags > 0:
+        wheel = 1
+    elif flags < 0:
+        wheel = -1
+
+    # send to env
+    action = actions_x[abs_x]
+
+    last_move = [x, y]
 
 
-def on_click(x, y, button, pressed):
-    action()
-    btn_name = str(button).startswith('Button.')
-    if btn_name is True:
-        btn = str(str(button).split('.')[1])
-        relative_x = relative_pos(x, screen.width)
-        relative_y = relative_pos(y, screen.height)
-        actions.append([mousemap[btn], relative_x, relative_y,  0, 0])
-
-    print('{0} at {1}'.format(
-        'Pressed', button if pressed else 'Released', button,
-        (x, y)))
-
-def on_scroll(x, y, dx, dy):
-    action()
-    relative_x = relative_pos(x, screen.width)
-    relative_y = relative_pos(y, screen.height)
-    actions.append([0, relative_x, relative_y, dy, dx])
-    print('Scrolled {0}.'.format('down' if dy < 0 else 'up'), dx, dy)
-
-
-# Start Listening for Actions
+cv2.setMouseCallback("Frame", mouse_event)
 keyListener = keyboard.Listener(on_press=on_press)
-mouseListener = mouse.Listener(
-    on_move=on_move,
-    on_click=on_click,
-    on_scroll=on_scroll)
-
 keyListener.start()
-mouseListener.start()
 
-# Run Environment
-env = gym.make('Desktop-v0')
-max_ep = 10
-step_cnt = 0
-ep_reward = 0
-done = False
-state = env.reset()
+try:
+    while True:
+        if done is True:
+            break
+        ret, im = camera.read(0)
+        cv2.imshow("Frame", im)
+        key = cv2.waitKeyEx(1)
+except:
+    pass
 
-while not done:
-    next_state, reward, done, _ = env.step(actions)
-    env.render()
-    step_cnt += 1
-    ep_reward += reward
-    state = next_state
-    actions.clear()
 
-print('Episode: {}, Step count: {}, Episode reward: {}'.format(
-    1, step_cnt, ep_reward))
+try: 
+    print('Running Environment')
+    last_state = None          
+    # Run Environment
+    obs = env.reset()
+    reward = 0
+    done = False
+    while True:
+        if done is True:
+            break
+        obs, reward, done, info = env.step(action)
+        last_state = obs
+        env.render()
+    print('Reward:', reward)
+except ConnectionRefusedError:
+    print('FAILED: Unable to Connect. Try running in debug mode.')
+except:
+    print ("FAILED: Unexpected error:", sys.exc_info()[0])
+    raise        
+finally:    
+    env.close()
+    print('Exiting...')
+    keyListener.stop()
+    camera.release()
+    cv2.destroyAllWindows()
+    env.close()
+    sys.exit()
 
-# Stop Environment
-keyListener.stop()
-mouseListener.stop()
-env.close()
