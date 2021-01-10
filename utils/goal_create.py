@@ -14,6 +14,7 @@ import socket
 import sys
 from time import sleep
 from keyMap import keymap
+from mouseActionMap import mouseActions
 from pynput import keyboard
 
 # grab initial frame from camera
@@ -53,10 +54,8 @@ def on_press(key):
     except KeyError:
         print('special key')
 
-
 def relative_pos(pos, total):
     return min(1.0, max(0.0, pos / total))
-
 
 def scale_mouse_coordinates(relative_x, relative_y):
     # This comes from LOGICAL_MAXIMUM in the mouse HID descriptor.
@@ -65,10 +64,8 @@ def scale_mouse_coordinates(relative_x, relative_y):
     y = int(relative_y * max_hid_value)
     return x, y
 
-def absolute_pos(current, last):
-    x = current[0] - last[0]
-    y = current[1] - last[1]
-    return x, y 
+def to_action(abs_x, abs_y):
+    pass
 
 def mouse_event(event, x, y, flags, param):
     global last_move
@@ -94,22 +91,28 @@ def mouse_event(event, x, y, flags, param):
     elif flags < 0:
         wheel = -1
 
+    rel = [0] * 6
+    rel[0] = button
+    rel[1] = scale_x & 0xff
+    rel[2] = (scale_x >> 8) & 0xff
+    rel[3] = scale_y & 0xff
+    rel[4] = (scale_y >> 8) & 0xff
+    rel[5] = wheel & 0xff
 
-    buf = [0] * 6
+    buf = [0] * 4 
     buf[0] = button
-    buf[1] = scale_x & 0xff
-    buf[2] = (scale_x >> 8) & 0xff
-    buf[3] = scale_y & 0xff
-    buf[4] = (scale_y >> 8) & 0xff
-    buf[5] = wheel & 0xff
+    buf[1] = abs_x & 0xff
+    buf[2] = abs_y & 0xff
+    buf[3] = wheel & 0xff
 
-    # buf = [0] * 4
-    # buf[0] = button
-    # buf[1] = abs_x & 0xff
-    # buf[2] = abs_y & 0xff
-    # buf[3] = wheel & 0xff
+    if abs_x > 20 or abs_y > 20:
+        print(abs_x, abs_y)
+    
+    if x <= 20 or y <= 20:
+        send(rel)
+    else:        
+        send(buf)
 
-    send(buf)
     last_move = [x, y]
 
 
@@ -146,7 +149,6 @@ try:
     print('connecting...')
     sock.connect(('192.168.1.248', 10000))
     connection = True
-    send([0, 0 & 0xff, 0 & 0xff, 0 & 0xff])
 
 except:
     print('Unable to Connect')
