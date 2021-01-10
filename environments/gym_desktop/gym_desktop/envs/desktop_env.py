@@ -114,23 +114,23 @@ class DesktopEnv(gym.Env):
             # Mouse Actions
             if self.debug is False:
                 if action < 42:
-                    mouse_action([0, actions[action], 0, 0])  # delta_x
+                    mouse_action(0, actions[action], 0, 0)  # delta_x
                 elif action > 41 and action < 83:
-                    mouse_action([0, 0, actions[action], 0])  # delta_y
+                    mouse_action(0, 0, actions[action], 0)  # delta_y
                 elif action == 83:
-                    mouse_action([actions[action], 0, 0, 0])  # btn_1
+                    mouse_action(actions[action], 0, 0, 0)  # btn_1
                 elif action == 84:
-                    mouse_action([actions[action], 0, 0, 0])  # btn_2
+                    mouse_action(actions[action], 0, 0, 0)  # btn_2
                 elif action == 85:
-                    mouse_action([actions[action], 0, 0, 0])  # btn_3
+                    mouse_action(actions[action], 0, 0, 0)  # btn_3
                 elif action == 86:
-                    mouse_action([0, 0, 0, 0])  # none
+                    mouse_action(0, 0, 0, 0)  # none
                 elif action == 87:
-                    mouse_action([0, 0, 0, actions[action]])  # whl_dwn
+                    mouse_action(0, 0, 0, actions[action])  # whl_dwn
                 elif action == 88:
-                    mouse_action([0, 0, 0, actions[action]])  # whl_none
+                    mouse_action(0, 0, 0, actions[action])  # whl_none
                 elif action == 89:
-                    mouse_action([0, 0, 0, actions[action]])  # whl_up
+                    mouse_action(0, 0, 0, actions[action])  # whl_up
             else:
                 print('MouseEvent: ', actions[action])
                 pass
@@ -139,16 +139,18 @@ class DesktopEnv(gym.Env):
                 print('NullEvent')
             pass
 
+        
         self.step_count += 1
-        if self.step_count >= self.step_limit:
+        if self.step_limit > 0 and self.step_count >= self.step_limit:
             print("Ending, step limit reached: ", self.step_count)
             done = True
 
-        runtime = self.last_time - self.start_time
-        if runtime > self.time_limit:
-            print("Ending, time limit reached: ", runtime)
-            done = True
-        return self.state, step_reward, done, {}
+        if self.timelimit > 0:
+            runtime = self.last_time - self.start_time
+            if runtime > self.time_limit:
+                print("Ending, time limit reached: ", runtime)
+                done = True
+            return self.state, step_reward, done, {}
 
     def reset(self):
         self.step_count = 0
