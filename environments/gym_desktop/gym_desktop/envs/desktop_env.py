@@ -23,7 +23,7 @@ STATE_H = 480
 
 # Action Constants
 no_key = 0
-no_mouse = [0, 0, 0, 0]
+#TODO: relative mouse reset...
 
 # Goal
 goal = np.array({})
@@ -70,7 +70,7 @@ class DesktopEnv(gym.Env):
     """
     metadata = {'render.modes': ['human', "rgb_array", "state_pixels"]}
 
-    def __init__(self, debug=False, show=False, timelimit=1000, steplimit=100):
+    def __init__(self, debug=False, show=False, human=False, timelimit=1000, steplimit=100):
         self.camera = WebcamVideoStream(src=0).start()
         self.state_space = self.camera.read().shape
         self.observation_space = spaces.Box(
@@ -81,6 +81,8 @@ class DesktopEnv(gym.Env):
         self.show = show
         self.step_limit = steplimit
         self.time_limit = timelimit
+
+        self.human = human
 
     def step(self, action=None):
         err_msg = "%r (%s) invalid" % (action, type(action))
@@ -98,70 +100,75 @@ class DesktopEnv(gym.Env):
             goal_reward = 1
 
         step_reward = action_reward + goal_reward
-
-        # Actions:
-        if action == 0:
+        if self.human is True:
+            # print('Human Action: ', action)
             pass
-        elif isinstance(actions[action], list):
-            # Key Actions
-            if self.debug is False:
-                key_stroke(actions[action])
-            else:
-                print('KeyEvent:', actions[action])
-                pass
-
-        elif isinstance(actions[action], int):
-            # Mouse Actions
-            if self.debug is False:
-                if action < 42:
-                    mouse_action(0, actions[action], 0, 0)  # delta_x
-                elif action > 41 and action < 83:
-                    mouse_action(0, 0, actions[action], 0)  # delta_y
-                elif action == 83:
-                    mouse_action(actions[action], 0, 0, 0)  # btn_1
-                elif action == 84:
-                    mouse_action(actions[action], 0, 0, 0)  # btn_2
-                elif action == 85:
-                    mouse_action(actions[action], 0, 0, 0)  # btn_3
-                elif action == 86:
-                    mouse_action(0, 0, 0, 0)  # none
-                elif action == 87:
-                    mouse_action(0, 0, 0, actions[action])  # whl_dwn
-                elif action == 88:
-                    mouse_action(0, 0, 0, actions[action])  # whl_none
-                elif action == 89:
-                    mouse_action(0, 0, 0, actions[action])  # whl_up
-            else:
-                print('MouseEvent: ', actions[action])
-                pass
         else:
-            if self.debug is not False:
-                print('NullEvent')
-            pass
+            # Actions:
+            if action == 0:
+                pass
+            elif isinstance(actions[action], list):
+                # Key Actions
+                if self.debug is False:
+                    key_stroke(actions[action])
+                else:
+                    print('KeyEvent:', actions[action])
+                    pass
 
+            elif isinstance(actions[action], int):
+                # Mouse Actions
+                if self.debug is False:
+                    if action < 42:
+                        mouse_action(0, actions[action], 0, 0)  # delta_x
+                    elif action > 41 and action < 83:
+                        mouse_action(0, 0, actions[action], 0)  # delta_y
+                    elif action == 83:
+                        mouse_action(actions[action], 0, 0, 0)  # btn_1
+                    elif action == 84:
+                        mouse_action(actions[action], 0, 0, 0)  # btn_2
+                    elif action == 85:
+                        mouse_action(actions[action], 0, 0, 0)  # btn_3
+                    elif action == 86:
+                        mouse_action(0, 0, 0, 0)  # none
+                    elif action == 87:
+                        mouse_action(0, 0, 0, actions[action])  # whl_dwn
+                    elif action == 88:
+                        mouse_action(0, 0, 0, actions[action])  # whl_none
+                    elif action == 89:
+                        mouse_action(0, 0, 0, actions[action])  # whl_up
+                else:
+                    print('MouseEvent: ', actions[action])
+                    pass
+            else:
+                if self.debug is True:
+                    print('NullEvent')
+                pass
+        
         
         self.step_count += 1
         if self.step_limit > 0 and self.step_count >= self.step_limit:
             print("Ending, step limit reached: ", self.step_count)
             done = True
 
-        if self.timelimit > 0:
+        if self.time_limit > 0:
             runtime = self.last_time - self.start_time
             if runtime > self.time_limit:
                 print("Ending, time limit reached: ", runtime)
                 done = True
-            return self.state, step_reward, done, {}
+
+        return self.state, step_reward, done, {}
 
     def reset(self):
         self.step_count = 0
         self.start_time = time.time()
         self.last_time = self.start_time
 
-        if self.debug is False:
-            mouse_action(no_mouse)
-            key_release()
+        # if self.debug is False or self.human is False:
+        #     mouse_action(0,0,0,0)
+        #     key_release()
 
-        cv2.destroyAllWindows()
+        # cv2.destroyAllWindows()
+        
         frame = self.camera.read()
         self.state = frame
         # TODO: clear clipboard

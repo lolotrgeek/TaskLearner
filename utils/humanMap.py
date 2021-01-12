@@ -1,4 +1,4 @@
-# Human Translated actionMap
+# Translate Human actions to Environment Actions
 actions_x = {
     -20: 1,
     -19: 2,
@@ -85,7 +85,7 @@ actions_y = {
     19: 81,
     20: 82,
 }
-actions = {
+actions_keys = {
     'btn_1': 83,
     'btn_2': 84,
     'btn_3': 85,

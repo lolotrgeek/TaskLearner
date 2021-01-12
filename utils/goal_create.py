@@ -14,7 +14,7 @@ import socket
 import sys
 from time import sleep
 from keyMap import keymap
-from mouseActionMap import mouseActions
+from humanMap import actions_x, actions_y, actions_keys
 from pynput import keyboard
 
 # grab initial frame from camera
@@ -105,14 +105,15 @@ def mouse_event(event, x, y, flags, param):
     buf[2] = abs_y & 0xff
     buf[3] = wheel & 0xff
 
-    if abs_x > 20 or abs_y > 20:
-        print(abs_x, abs_y)
-    
-    if x <= 20 or y <= 20:
-        send(rel)
-    else:        
-        send(buf)
+    try :
+        actions = (actions_x[abs_x], actions_y[abs_y])
+        print('actions ' , actions)
+    except:
+        print('not action ' , abs_x, abs_y)
 
+    print(rel)
+    send(rel)     
+    # send(buf)
     last_move = [x, y]
 
 

@@ -28,7 +28,7 @@ def key_stroke(key_event):
     return {'success': True}
 
 
-def mouse_action(button, dx, dy, wheel, width, height):
+def mouse_action(button, dx, dy, wheel):
     '''
     Performs a mouse event.
 
