@@ -97,13 +97,14 @@ def mouse_action(event, x, y, flags, param):
     button, wheel = parse_cv2_mouse_event(event, flags)
     try :
         mouse_event = [button, actions_x[abs_x], actions_y[abs_y], wheel]
+        # print('x, y', abs_x, actions_x[abs_x], actions_y[abs_y], abs_y)
     except:
+        # print(abs_x, abs_y)
         pass
     
     mouse_relative = build_relative_mouse_report(button, x, y, wheel, height, width)
 
     send(mouse_relative)
-    # print('mouse_event', mouse_event)
     last_move = [x, y]
 
 def send(event):
@@ -123,17 +124,16 @@ def send(event):
         print('unable to send', event)
         return
 
+# Setup View
+cv2.setMouseCallback("Frame", mouse_action)
+keyListener = keyboard.Listener(on_press=on_press)
+keyListener.start()
+
 try:
     print('agent connecting...')
     sock.connect(('192.168.1.248', 10000))
     connection = True
-    # Setup View
     print('agent connected')
-    
-    cv2.setMouseCallback("Frame", mouse_action)
-    keyListener = keyboard.Listener(on_press=on_press)
-    keyListener.start()
-
     if connection is True:
         print('Running Environment')
         last_state = None
@@ -150,16 +150,16 @@ try:
                 break
             if mouse_event is not None:
                 if mouse_event[0] > 0:
-                    print('btn', mouse_event[0])
+                    # print('btn', mouse_event[0])
                     obs, reward, done, info = env.step(mouse_event[0])
-                elif mouse_event[1] != 0:
-                    print('x', mouse_event[1])
+                if mouse_event[1] != 0:
+                    # print('x', mouse_event[1])
                     obs, reward, done, info = env.step(mouse_event[1])
-                elif mouse_event[2] != 0:
-                    print('y', mouse_event[2])
+                if mouse_event[2] != 0:
+                    # print('y', mouse_event[2])
                     obs, reward, done, info = env.step(mouse_event[2])        
-                elif mouse_event[3] > 0:
-                    print('whl' , mouse_event[3])
+                if mouse_event[3] > 0:
+                    # print('whl' , mouse_event[3])
                     obs, reward, done, info = env.step(mouse_event[3])
                 mouse_event = None
             if key_event is not None: 
