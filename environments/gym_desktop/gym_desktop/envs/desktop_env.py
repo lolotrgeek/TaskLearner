@@ -17,14 +17,6 @@ from random import randint
 
 faulthandler.enable()
 
-# State Constants
-STATE_W = 640
-STATE_H = 480
-
-# Action Constants
-no_key = 0
-#TODO: relative mouse reset...
-
 # Goal
 goal = np.array({})
 with open('goal.state', 'rb') as filehandle:
@@ -95,13 +87,15 @@ class DesktopEnv(gym.Env):
         action_reward = 1
         # distance (weighted pixels) from goal state, if 0 state equals goal
         if self.debug is False:
-            goal_reward = (np.sum(goal) - np.sum(self.state)) * -1
+            goal_reward = (np.sum(goal, dtype='int64') - np.sum(self.state, dtype='int64')) * -1
         else :
             goal_reward = 1
 
         step_reward = action_reward + goal_reward
+
         if self.human is True:
-            # print('Human Action: ', action)
+            # if action > 0:
+            #     print('Human Action: ', action)
             pass
         else:
             # Actions:
@@ -171,6 +165,8 @@ class DesktopEnv(gym.Env):
         
         frame = self.camera.read()
         self.state = frame
+
+        # TODO: relative mouse reset...
         # TODO: clear clipboard
         return self.state
 
