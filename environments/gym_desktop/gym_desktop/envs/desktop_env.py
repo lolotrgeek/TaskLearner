@@ -86,7 +86,7 @@ class DesktopEnv(gym.Env):
         action_reward = 1
         # distance (weighted pixels) from goal state, if 0 state equals goal
         if self.debug is False:
-            goal_reward = (np.sum(goal, dtype='int64') - np.sum(self.state, dtype='int64'))
+            goal_reward = (np.sum(self.state, dtype='int64') - np.sum(goal, dtype='int64'))
         else :
             goal_reward = 1
 
