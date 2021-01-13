@@ -5,13 +5,17 @@ import gym_desktop
 import cv2
 import socket
 import sys
+from pyinstrument import Profiler
 from pynput import keyboard
 from humanMap import actions_x, actions_y, actions_keys, keymap
+
+profiler = Profiler()
+profiler.start()
 
 cv2.namedWindow("Frame")
 
 # Setup Envrionment
-env = gym.make('Desktop-v0', debug=True, show=False,
+env = gym.make('Desktop-v0', debug=False, show=False,
                human=True, steplimit=0, timelimit=0)
 
 done = False
@@ -23,8 +27,15 @@ last_move = None
 height = None
 width = None
 
+out_of_bounds = []
+
 connection = False
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+def log_actions(actions):
+    with open('actions.txt', 'a') as filehandle:
+        filehandle.writelines("%s\n" % action for action in actions)
+
 def on_press(key):
     global key_event
     global done
@@ -87,6 +98,7 @@ def mouse_action(event, x, y, flags, param):
     global mouse_event
     global height
     global width
+    global out_of_bounds
 
     if last_move is None:
         last_move = [x, y]
@@ -99,7 +111,12 @@ def mouse_action(event, x, y, flags, param):
         mouse_event = [button, actions_x[abs_x], actions_y[abs_y], wheel]
         # print('x, y', abs_x, actions_x[abs_x], actions_y[abs_y], abs_y)
     except:
-        # print(abs_x, abs_y)
+        if abs_x > 20 or abs_x < -20:
+            print('Out of Bounds X:', abs_x)
+            out_of_bounds.append('x : ' + str(abs_x))
+        elif abs_y > 20 or abs_y < -20:
+            print('Out of Bounds Y:', abs_y)
+            out_of_bounds.append('y : ' + str(abs_y))
         pass
     
     mouse_relative = build_relative_mouse_report(button, x, y, wheel, height, width)
@@ -182,4 +199,8 @@ finally:
     keyListener.stop()
     cv2.destroyAllWindows()
     env.close()
-    sys.exit()
+    print(out_of_bounds)
+    log_actions(out_of_bounds)
+    profiler.stop()
+
+print(profiler.output_text(unicode=True, color=True))
