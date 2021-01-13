@@ -86,7 +86,7 @@ class DesktopEnv(gym.Env):
         action_reward = 1
         # distance (weighted pixels) from goal state, if 0 state equals goal
         if self.debug is False:
-            goal_reward = (np.sum(goal, dtype='int64') - np.sum(self.state, dtype='int64')) * -1
+            goal_reward = (np.sum(goal, dtype='int64') - np.sum(self.state, dtype='int64'))
         else :
             goal_reward = 1
 
@@ -156,17 +156,12 @@ class DesktopEnv(gym.Env):
         self.start_time = time.time()
         self.last_time = self.start_time
 
-        # if self.debug is False or self.human is False:
-        #     mouse_action(0,0,0,0)
-        #     key_release()
-
-        # cv2.destroyAllWindows()
-        
         frame = self.camera.read()
         self.state = frame
 
         # TODO: relative mouse reset...
         # TODO: clear clipboard
+        # TODO: release any keys
         return self.state
 
     def render(self, mode='human'):
