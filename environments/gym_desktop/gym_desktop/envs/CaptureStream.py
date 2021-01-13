@@ -2,14 +2,14 @@
 from threading import Thread
 import cv2
 
-class WebcamVideoStream:
-	def __init__(self, src=0, name="WebcamVideoStream", width=800, height=640):
+class CaptureVideoStream:
+	def __init__(self, src=0, name="CaptureVideoStream", width=640, height=480):
 		# initialize the video camera stream and read the first frame
 		# from the stream
 		self.stream = cv2.VideoCapture(src)
-		self.codec = 0x47504A4D  # MJPG
+		# self.codec = 0x47504A4D  # MJPG
 		# self.camera.set(cv2.CAP_PROP_FPS, 30.0)
-		self.stream.set(cv2.CAP_PROP_FOURCC, self.codec)
+		# self.stream.set(cv2.CAP_PROP_FOURCC, self.codec)
 		self.stream.set(cv2.CAP_PROP_FRAME_WIDTH, width)
 		self.stream.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 		(self.grabbed, self.frame) = self.stream.read()

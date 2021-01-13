@@ -7,8 +7,7 @@ from gym_desktop.envs.actions.main import key_stroke, mouse_action, key_release
 
 import numpy as np
 import cv2
-import imutils
-from imutils.video import WebcamVideoStream
+from gym_desktop.envs.CaptureStream import CaptureVideoStream
 import pickle
 
 import time
@@ -63,7 +62,7 @@ class DesktopEnv(gym.Env):
     metadata = {'render.modes': ['human', "rgb_array", "state_pixels"]}
 
     def __init__(self, debug=False, show=False, human=False, timelimit=1000, steplimit=100):
-        self.camera = WebcamVideoStream(src=0).start()
+        self.camera = CaptureVideoStream(src=0, width=1920, height=1080).start()
         self.state_space = self.camera.read().shape
         self.observation_space = spaces.Box(
             low=0, high=255, shape=self.state_space, dtype=np.uint8
