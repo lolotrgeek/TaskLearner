@@ -17,9 +17,13 @@ from keyMap import keymap
 from humanMap import actions_x, actions_y, actions_keys
 from pynput import keyboard
 
-# grab initial frame from camera
-camera = cv2.VideoCapture(0)
-ret, im = camera.read(0)
+# Start Stream
+stream = cv2.VideoCapture(0)
+stream.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+stream.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+
+# grab initial frame from stream
+ret, im = stream.read(0)
 cv2.namedWindow("Frame")
 
 dimensions = im.shape
@@ -105,15 +109,19 @@ def mouse_event(event, x, y, flags, param):
     buf[2] = abs_y & 0xff
     buf[3] = wheel & 0xff
 
+    print(abs_x & 0xff, abs_y & 0xff)
+
     try :
         actions = (actions_x[abs_x], actions_y[abs_y])
-        print('actions ' , actions)
+        # print('actions ' , actions)
     except:
-        print('not action ' , abs_x, abs_y)
+        # print('not action ' , abs_x, abs_y)
+        pass
 
-    print(rel)
-    send(rel)     
+    # print(rel)
     # send(buf)
+    send(rel)     
+
     last_move = [x, y]
 
 
@@ -158,7 +166,7 @@ try:
     while True:
         if done is True:
             break
-        ret, im = camera.read(0)
+        ret, im = stream.read(0)
         cv2.imshow("Frame", im)
         key = cv2.waitKeyEx(1)
         if key & 0xFF == ord('`'):
@@ -170,6 +178,6 @@ except:
 print('Exiting...')
 sock.close()
 keyListener.stop()
-camera.release()
+stream.release()
 cv2.destroyAllWindows()
 sys.exit()
