@@ -61,8 +61,8 @@ class DesktopEnv(gym.Env):
     """
     metadata = {'render.modes': ['human', "rgb_array", "state_pixels"]}
 
-    def __init__(self, debug=False, show=False, human=False, timelimit=1000, steplimit=100):
-        self.camera = CaptureVideoStream(src=0, width=1920, height=1080).start()
+    def __init__(self, debug=False, show=False, human=False, timelimit=1000, steplimit=100, width=640, height=480):
+        self.camera = CaptureVideoStream(src=0, width=width, height=height).start()
         self.state_space = self.camera.read().shape
         self.observation_space = spaces.Box(
             low=0, high=255, shape=self.state_space, dtype=np.uint8
