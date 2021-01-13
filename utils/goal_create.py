@@ -143,9 +143,9 @@ def send(event):
         return
 
 
-def saveState():
+def saveState(frame):
     with open('goal.state', 'wb') as filehandle:
-        pickle.dump(im, filehandle)
+        pickle.dump(frame, filehandle)
     print('Done.')
 
 
@@ -171,7 +171,9 @@ try:
         key = cv2.waitKeyEx(1)
         if key & 0xFF == ord('`'):
             print('Saving State...')
-            saveState()
+            goal = cv2.resize(im, (640, 480))
+            saveState(goal)
+            break
 except:
     pass
 

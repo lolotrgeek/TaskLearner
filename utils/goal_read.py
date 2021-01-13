@@ -15,8 +15,8 @@ with open('goal.state', 'rb') as filehandle:
 with open('compare.state', 'rb') as filehandle:
     compare = pickle.load(filehandle)
 
-print((np.sum(goal) - np.sum(same)) * -1) 
-print((np.sum(goal) - np.sum(compare)) * -1) 
+print(np.sum(same, dtype='int64') - np.sum(goal, dtype='int64')) 
+print(np.sum(compare, dtype='int64') - np.sum(goal, dtype='int64')) 
 
 try:
     while True:
