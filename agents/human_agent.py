@@ -184,6 +184,7 @@ try:
                 key_event = None
             else: 
                 obs, reward, done, info = env.step(0)
+            print('Reward:', reward, end='\r')
             cv2.imshow("Frame", obs)
             cv2.waitKeyEx(1)                
             last_state = obs
